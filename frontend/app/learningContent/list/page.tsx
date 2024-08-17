@@ -34,10 +34,10 @@ export default function ListLearningContent() {
                 <CardHeader>
                   <CardTitle>{content.title}</CardTitle>
                 </CardHeader>
-                <CardContent>
+                {/* <CardContent>
                   <p>{content.content}</p>
                   <p className="text-sm text-gray-500">{content.category}</p>
-                </CardContent>
+                </CardContent> */}
               </Card>
             </Link>
           ))}
