@@ -10,7 +10,7 @@ export interface LearningContent {
 // Fetchリクエストの共通部分を処理する関数
 const apiFetch = async (
   endpoint: string,
-  method: "GET" | "POST",
+  method: "GET" | "POST" | "PUT" | "DELETE",
   body?: LearningContent
 ) => {
   const response = await fetch(`http://localhost:8080/api${endpoint}`, {
@@ -32,8 +32,21 @@ export const fetchLearningContents = async (): Promise<LearningContent[]> => {
   return apiFetch("/learning", "GET");
 };
 
+export const fetchLearningContent = async (
+  id: number
+): Promise<LearningContent> => {
+  return apiFetch(`/learning/${id}`, "GET");
+};
+
 export const addLearningContent = async (
   data: LearningContent
 ): Promise<LearningContent> => {
   return apiFetch("/learning", "POST", data);
+};
+
+export const updateLearningContent = async (
+  id: number,
+  data: LearningContent
+): Promise<LearningContent> => {
+  return apiFetch(`/learning/${id}`, "PUT", data);
 };

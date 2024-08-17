@@ -18,3 +18,12 @@ DB: RDB(aws)
 server: EC2(aws) frontend と backend を同じサーバでやる。
 メディアコンテンツ: S3(aws)
 モニタリング: xxx
+
+shadcn の使い方
+$ npx shadcn-ui@latest add button
+https://ui.shadcn.com/docs/components/
+
+materials-icon の使い方
+setup
+$ npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+https://mui.com/material-ui/material-icons/

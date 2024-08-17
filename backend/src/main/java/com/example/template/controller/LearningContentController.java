@@ -41,4 +41,22 @@ public class LearningContentController {
         learningContentService.deleteContent(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    // 編集用のエンドポイント
+    @PutMapping("/{id}")
+    public ResponseEntity<LearningContentEntity> updateLearningContent(
+            @PathVariable Long id, @RequestBody LearningContentEntity newContent) {
+        Optional<LearningContentEntity> optionalContent = learningContentService.getContentById(id);
+
+        if (optionalContent.isPresent()) {
+            LearningContentEntity existingContent = optionalContent.get();
+            existingContent.setTitle(newContent.getTitle());
+            existingContent.setContent(newContent.getContent());
+            existingContent.setCategory(newContent.getCategory());
+            learningContentService.saveContent(existingContent);
+            return ResponseEntity.ok(existingContent);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

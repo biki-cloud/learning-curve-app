@@ -1,36 +1,21 @@
 "use client";
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { redirect, useRouter } from "next/navigation";
 import {
   fetchLearningContents,
   addLearningContent,
   LearningContent,
-} from "../../lib/api";
+} from "../../../lib/api";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
 
-export default function Home() {
-  const [learningContents, setLearningContents] = useState<LearningContent[]>(
-    []
-  );
+export default function CreateLearningContent() {
   const [newContent, setNewContent] = useState<LearningContent>({
     title: "",
     content: "",
     category: "",
   });
 
-  useEffect(() => {
-    const loadContents = async () => {
-      const data = await fetchLearningContents();
-      setLearningContents(data);
-    };
-    loadContents();
-  }, []);
+  const router = useRouter(); // useRouterフックを取得
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -41,30 +26,16 @@ export default function Home() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const addedContent = await addLearningContent(newContent);
-    setLearningContents([...learningContents, addedContent]);
     setNewContent({ title: "", content: "", category: "" });
+    router.push("/learningContent/detail/" + addedContent.id);
   };
 
   return (
     <div className="p-8 space-y-8">
       <header className="text-center">
-        <h1 className="text-4xl font-bold mb-4">学習内容リスト</h1>
+        <h1 className="text-4xl font-bold mb-4">学習内容作成</h1>
       </header>
       <main>
-        <section className="space-y-4 mb-8">
-          {learningContents.map((content) => (
-            <Card key={content.id} className="max-w-sm mx-auto">
-              <CardHeader>
-                <CardTitle>{content.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{content.content}</p>
-                <p className="text-sm text-gray-500">{content.category}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </section>
-
         <section>
           <h2 className="text-2xl font-semibold mb-4">新しい学習内容を追加</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
