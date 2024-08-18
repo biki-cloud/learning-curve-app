@@ -8,21 +8,26 @@ import getMarkDown from "./getMarkDown";
 
 import codeBlock from "./codeBlock";
 
+interface Props {
+  markdownString: string;
+}
+
 // 最後はpropsからmarkdownを受け取るようにする
-const MarkDown = () => {
+const MarkdownPreview = ({ markdownString: markdownString }: Props) => {
   return (
     <div className={styles.markdown}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeKatex]}
-        components={{
-          pre: codeBlock,
-        }}
+        // TODO: codeblockをカスタマイズする
+        // components={{
+        //   pre: codeBlock,
+        // }}
       >
-        {getMarkDown()}
+        {markdownString}
       </ReactMarkdown>
     </div>
   );
 };
 
-export default MarkDown;
+export default MarkdownPreview;
