@@ -8,8 +8,13 @@ x^2 + y^2 = 1 をインライン表示すると $x^2 + y^2 = 1$ になります�
 
 S=sum\_{n=1}^infty a_n
 
+```
+sss
+```
+
 frac{1}{2}
 
-```js
+```javascript
+ssssssss;
 console.log("Hello, world!");
 ```

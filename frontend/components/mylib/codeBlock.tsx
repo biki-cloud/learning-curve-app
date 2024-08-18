@@ -1,28 +1,23 @@
-import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
-import type { ClassAttributes, HTMLAttributes } from "react";
-import type { ExtraProps } from "react-markdown";
-import { dracula } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-const codeBlock = ({
-  children,
-  ...props
-}: ClassAttributes<HTMLPreElement> &
-  HTMLAttributes<HTMLPreElement> &
-  ExtraProps) => {
-  if (!children || typeof children !== "object") {
-    return <code {...props}>{children}</code>;
-  }
-  const childType = "type" in children ? children.type : "";
-  if (childType !== "code") {
-    return <code {...props}>{children}</code>;
-  }
+const CodeBlock = ({ node, inline, className, children, ...props }: any) => {
+  const language = className?.replace(/language-/, "") || "javascript";
 
-  const childProps = "props" in children ? children.props : {};
-  const { children: code } = childProps;
-
-  return (
-    <SyntaxHighlighter>{String(code).replace(/\n$/, "")}</SyntaxHighlighter>
+  return !inline ? (
+    <SyntaxHighlighter
+      style={solarizedlight} // 適切なスタイルを選択
+      language={language}
+      PreTag="div"
+      {...props}
+    >
+      {String(children).replace(/\n$/, "")}
+    </SyntaxHighlighter>
+  ) : (
+    <code className={className} {...props}>
+      {children}
+    </code>
   );
 };
 
-export default codeBlock;
+export default CodeBlock;
