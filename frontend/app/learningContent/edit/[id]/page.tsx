@@ -7,7 +7,16 @@ import {
   updateLearningContent,
   LearningContent,
 } from "@/lib/api";
+import "easymde/dist/easymde.min.css";
 import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+import MarkdownPreview from "@/components/mylib/markdownPreview";
+
+// SimpleMDEを遅延読み込み
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+  loading: () => <p>Loading editor...</p>,
+});
 
 interface Props {
   params: {
@@ -29,13 +38,11 @@ export default function EditLearningContent({ params }: Props) {
     loadContent();
   }, [id]);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (name: keyof LearningContent, value: string) => {
     if (learningContent) {
       setLearningContent({
         ...learningContent,
-        [e.target.name]: e.target.value,
+        [name]: value,
       });
     }
   };
@@ -69,7 +76,7 @@ export default function EditLearningContent({ params }: Props) {
           type="text"
           name="title"
           value={learningContent.title}
-          onChange={handleChange}
+          onChange={(e) => handleChange("title", e.target.value)}
           className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
@@ -77,14 +84,13 @@ export default function EditLearningContent({ params }: Props) {
         <label htmlFor="content" className="block text-sm font-medium mb-1">
           内容
         </label>
-        <textarea
-          id="content"
-          name="content"
+        {/* SimpleMDEを使用 */}
+        <SimpleMDE
           value={learningContent.content}
-          onChange={handleChange}
-          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          rows={4}
-        ></textarea>
+          onChange={(value) => handleChange("content", value)}
+        />
+        {/* MarkdownPreviewを使用 */}
+        <MarkdownPreview markdownString={learningContent.content} />
       </div>
       <div>
         <label htmlFor="category" className="block text-sm font-medium mb-1">
@@ -95,7 +101,7 @@ export default function EditLearningContent({ params }: Props) {
           type="text"
           name="category"
           value={learningContent.category}
-          onChange={handleChange}
+          onChange={(e) => handleChange("category", e.target.value)}
           className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
