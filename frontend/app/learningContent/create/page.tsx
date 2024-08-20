@@ -1,12 +1,17 @@
 "use client";
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { redirect, useRouter } from "next/navigation";
-import {
-  fetchLearningContents,
-  addLearningContent,
-  LearningContent,
-} from "../../../lib/api";
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import "easymde/dist/easymde.min.css";
+import { addLearningContent, LearningContent } from "../../../lib/api";
 import { Button } from "@/components/ui/button";
+import MarkdownPreview from "@/components/mylib/markdownPreview";
+
+// SimpleMDEの読み込みを遅延させる
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
 
 export default function CreateLearningContent() {
   const [newContent, setNewContent] = useState<LearningContent>({
@@ -15,15 +20,21 @@ export default function CreateLearningContent() {
     category: "",
   });
 
-  const router = useRouter(); // useRouterフックを取得
+  const router = useRouter();
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setNewContent({ ...newContent, [e.target.name]: e.target.value });
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewContent({ ...newContent, title: e.target.value });
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewContent({ ...newContent, category: e.target.value });
+  };
+
+  const handleContentChange = (value: string) => {
+    setNewContent({ ...newContent, content: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const addedContent = await addLearningContent(newContent);
     setNewContent({ title: "", content: "", category: "" });
@@ -44,23 +55,17 @@ export default function CreateLearningContent() {
               name="title"
               placeholder="タイトル"
               value={newContent.title}
-              onChange={handleChange}
+              onChange={handleTitleChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
-            <textarea
-              name="content"
-              placeholder="内容"
-              value={newContent.content}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              rows={4}
-            ></textarea>
+            <SimpleMDE onChange={handleContentChange} />
+            <MarkdownPreview markdownString={newContent.content} />
             <input
               type="text"
               name="category"
               placeholder="カテゴリ"
               value={newContent.category}
-              onChange={handleChange}
+              onChange={handleCategoryChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
             <Button type="submit">追加</Button>

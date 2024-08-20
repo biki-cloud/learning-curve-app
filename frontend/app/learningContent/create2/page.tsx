@@ -15,6 +15,7 @@ const MarkDownEditor = () => {
   const [markdown, setMarkdown] = useState("");
 
   return (
+    // TODO: editorとpreviewは画面横で半分ずつ表示する
     <div>
       <SimpleMDE onChange={(value) => setMarkdown(value)} />
       <MarkdownPreview markdownString={markdown} />
