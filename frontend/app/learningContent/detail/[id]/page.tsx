@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LearningContent, fetchLearningContent } from "@/lib/api";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import MarkdownPreview from "@/components/mylib/markdownPreview"; // MarkdownPreviewをインポート
 
 interface Props {
   params: {
@@ -43,7 +44,8 @@ export default function DetailLearningContent({ params }: Props) {
             {learningContent.category}
           </p>
           <h3 className="text-lg font-medium mb-2">内容</h3>
-          <p className="text-base text-gray-600">{learningContent.content}</p>
+          {/* MarkdownPreviewを使ってcontentを表示 */}
+          <MarkdownPreview markdownString={learningContent.content} />
         </section>
         <section className="text-center">
           <Link href={`/learningContent/edit/${id}`} passHref>

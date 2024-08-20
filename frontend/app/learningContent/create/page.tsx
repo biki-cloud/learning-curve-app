@@ -31,6 +31,7 @@ export default function CreateLearningContent() {
   };
 
   const handleContentChange = (value: string) => {
+    console.log(value);
     setNewContent({ ...newContent, content: value });
   };
 
