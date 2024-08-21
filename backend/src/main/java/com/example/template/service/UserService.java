@@ -31,6 +31,6 @@ public class UserService {
     }
 
     public Optional<UserEntity> findByUsernameAndPassword(String username, String password) {
-        // 実装を追加
+        return userRepository.findByUsernameAndPassword(username, password);
     }
 }
