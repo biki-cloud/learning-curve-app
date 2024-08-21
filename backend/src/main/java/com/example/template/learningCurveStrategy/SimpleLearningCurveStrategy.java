@@ -15,12 +15,23 @@ public class SimpleLearningCurveStrategy implements LearningCurveStrategy {
     public List<LearningContentEntity> filterByLearningCurve(List<LearningContentEntity> contents) {
         LocalDate now = LocalDate.now();
         return contents.stream()
-                .filter(content -> {
-                    LocalDate createdDate = content.getCreatedDate();
-                    long daysBetween = ChronoUnit.DAYS.between(createdDate, now);
-                    // 学習曲線の条件: 例えば、作成から7日、14日、30日後に復習
-                    return daysBetween == 7 || daysBetween == 14 || daysBetween == 30;
-                })
+                .peek(content -> content.setLevel(calculateLevel(content, now)))
+                .sorted((c1, c2) -> Integer.compare(c1.getLevel(), c2.getLevel()))
                 .collect(Collectors.toList());
+    }
+
+    private int calculateLevel(LearningContentEntity content, LocalDate today) {
+        double timeWeight = calculateTimeWeight(content.getLastReviewedDate(), today);
+        double baseLevel = content.getReviewCount();
+        double finalLevel = baseLevel * timeWeight;
+        return (int) Math.min(Math.max(finalLevel, 0), 10);
+    }
+
+    private double calculateTimeWeight(LocalDate lastReviewedDate, LocalDate today) {
+        if (lastReviewedDate == null) {
+            return 10;
+        }
+        long daysSinceLastReview = ChronoUnit.DAYS.between(lastReviewedDate, today);
+        return Math.min(daysSinceLastReview, 10);
     }
 }

@@ -35,4 +35,13 @@ public class LearningContentEntity {
 
     @Column(nullable = true)
     private LocalDate createdDate;
+
+    @Column(nullable = true)
+    private LocalDate lastReviewedDate;
+
+    @Column(nullable = false)
+    private int reviewCount = 0;
+
+    @Column(nullable = false)
+    private int level = 1;
 }
