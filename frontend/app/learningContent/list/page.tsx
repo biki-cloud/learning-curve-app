@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { fetchLearningContents, LearningContent } from "../../../lib/api";
+import {
+  fetchLearningContents,
+  LearningContent,
+} from "../../../components/mylib/api";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 

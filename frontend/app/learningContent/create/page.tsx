@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import "easymde/dist/easymde.min.css";
-import { addLearningContent, LearningContent } from "../../../lib/api";
+import {
+  addLearningContent,
+  LearningContent,
+} from "../../../components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
 

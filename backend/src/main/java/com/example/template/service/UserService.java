@@ -29,4 +29,8 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    public Optional<UserEntity> findByUsernameAndPassword(String username, String password) {
+        // 実装を追加
+    }
 }

@@ -57,4 +57,11 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/signin")
+    public ResponseEntity<UserEntity> signin(@RequestBody UserEntity user) {
+        Optional<UserEntity> foundUser = userService.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        return foundUser.map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
 }

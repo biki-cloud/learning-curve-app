@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LearningContent, fetchLearningContent } from "@/lib/api";
+import { LearningContent, fetchLearningContent } from "@/components/mylib/api";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MarkdownPreview from "@/components/mylib/markdownPreview"; // MarkdownPreviewをインポート

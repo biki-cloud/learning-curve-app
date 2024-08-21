@@ -7,11 +7,23 @@ export interface LearningContent {
   category: string;
 }
 
+export interface User {
+  id?: number;
+  username: string;
+  password: string;
+  email: string;
+}
+
+export interface SigninData {
+  username: string;
+  password: string;
+}
+
 // Fetchリクエストの共通部分を処理する関数
 const apiFetch = async (
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "DELETE",
-  body?: LearningContent
+  body?: LearningContent | User | SigninData
 ) => {
   const response = await fetch(`http://localhost:8080/api${endpoint}`, {
     method,
@@ -49,4 +61,12 @@ export const updateLearningContent = async (
   data: LearningContent
 ): Promise<LearningContent> => {
   return apiFetch(`/learning/${id}`, "PUT", data);
+};
+
+export const signup = async (data: User): Promise<User> => {
+  return apiFetch("/users", "POST", data);
+};
+
+export const signin = async (data: SigninData): Promise<User> => {
+  return apiFetch("/users/signin", "POST", data);
 };

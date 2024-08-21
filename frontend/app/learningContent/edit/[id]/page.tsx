@@ -6,7 +6,7 @@ import {
   fetchLearningContent,
   updateLearningContent,
   LearningContent,
-} from "@/lib/api";
+} from "@/components/mylib/api";
 import "easymde/dist/easymde.min.css";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
