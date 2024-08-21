@@ -8,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "learning_content")
@@ -29,6 +30,9 @@ public class LearningContentEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+
+    @Column(nullable = true)
+    private LocalDate createdDate;
 
     // Getters and Setters
     public Long getId() {
@@ -69,5 +73,13 @@ public class LearningContentEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 }

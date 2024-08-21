@@ -38,6 +38,13 @@ public class LearningContentController {
         return learningContentService.getContentsByUser(user);
     }
 
+    @GetMapping("/user/{userId}/learning-curve")
+    public List<LearningContentEntity> getContentsByLearningCurve(@PathVariable Long userId) {
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+        return learningContentService.getContentsByLearningCurve(user);
+    }
+
     @PostMapping
     public ResponseEntity<LearningContentEntity> createContent(@RequestBody LearningContentEntity content) {
         LearningContentEntity savedContent = learningContentService.saveContent(content);
