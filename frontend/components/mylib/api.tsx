@@ -41,8 +41,10 @@ const apiFetch = async (
   return response.json();
 };
 
-export const fetchLearningContents = async (): Promise<LearningContent[]> => {
-  return apiFetch("/learning", "GET");
+export const fetchLearningContents = async (
+  userId: number
+): Promise<LearningContent[]> => {
+  return apiFetch(`/learning/user/${userId}`, "GET");
 };
 
 export const fetchLearningContent = async (

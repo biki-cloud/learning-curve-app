@@ -11,14 +11,25 @@ export default function ListLearningContent() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
     []
   );
+  const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const user = JSON.parse(userData);
+      setUserId(user.id);
+    }
+  }, []);
 
   useEffect(() => {
     const loadContents = async () => {
-      const data = await fetchLearningContents();
-      setLearningContents(data);
+      if (userId !== null) {
+        const data = await fetchLearningContents(userId);
+        setLearningContents(data);
+      }
     };
     loadContents();
-  }, []);
+  }, [userId]);
 
   return (
     <div className="p-8 space-y-8">
