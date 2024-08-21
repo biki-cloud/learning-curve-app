@@ -5,6 +5,7 @@ export interface LearningContent {
   title: string;
   content: string;
   category: string;
+  user: User; // Added user field
 }
 
 export interface User {

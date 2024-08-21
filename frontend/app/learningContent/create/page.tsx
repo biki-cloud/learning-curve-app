@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import "easymde/dist/easymde.min.css";
@@ -21,9 +21,20 @@ export default function CreateLearningContent() {
     title: "",
     content: "",
     category: "",
+    user: { id: 0, username: "", password: "", email: "" }, // 初期値を設定
   });
 
   const router = useRouter();
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setNewContent((prevContent) => ({
+        ...prevContent,
+        user: JSON.parse(userData),
+      }));
+    }
+  }, []);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewContent({ ...newContent, title: e.target.value });
@@ -34,14 +45,18 @@ export default function CreateLearningContent() {
   };
 
   const handleContentChange = (value: string) => {
-    console.log(value);
     setNewContent({ ...newContent, content: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const addedContent = await addLearningContent(newContent);
-    setNewContent({ title: "", content: "", category: "" });
+    setNewContent({
+      title: "",
+      content: "",
+      category: "",
+      user: newContent.user,
+    });
     router.push("/learningContent/detail/" + addedContent.id);
   };
 
