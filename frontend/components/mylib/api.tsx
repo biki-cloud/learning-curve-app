@@ -73,3 +73,9 @@ export const signup = async (data: User): Promise<User> => {
 export const signin = async (data: SigninData): Promise<User> => {
   return apiFetch("/users/signin", "POST", data);
 };
+
+export const fetchLearningCurveContents = async (
+  userId: number
+): Promise<LearningContent[]> => {
+  return apiFetch(`/learning/user/${userId}/learning-curve`, "GET");
+};

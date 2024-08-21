@@ -10,12 +10,18 @@ import ListIcon from "@mui/icons-material/List";
 import { User } from "@/components/mylib/api";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 
 const items = [
   {
     title: "一覧",
     href: "/learningContent/list",
     icon: <ListIcon />,
+  },
+  {
+    title: "学習",
+    href: "/learningContent/learning",
+    icon: <LightbulbIcon />,
   },
   {
     title: "作成",
