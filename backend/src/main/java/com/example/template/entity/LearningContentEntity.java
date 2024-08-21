@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name = "learning_content")
@@ -23,6 +25,10 @@ public class LearningContentEntity {
 
     @Column(nullable = false)
     private String category;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 
     // Getters and Setters
     public Long getId() {
@@ -55,5 +61,13 @@ public class LearningContentEntity {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 }

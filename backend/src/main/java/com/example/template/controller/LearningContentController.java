@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.template.entity.LearningContentEntity;
+import com.example.template.entity.UserEntity;
 import com.example.template.service.LearningContentService;
 
 import java.util.List;
@@ -30,6 +31,13 @@ public class LearningContentController {
                       .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    @GetMapping("/user/{userId}")
+    public List<LearningContentEntity> getContentsByUser(@PathVariable Long userId) {
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+        return learningContentService.getContentsByUser(user);
+    }
+
     @PostMapping
     public ResponseEntity<LearningContentEntity> createContent(@RequestBody LearningContentEntity content) {
         LearningContentEntity savedContent = learningContentService.saveContent(content);
@@ -42,7 +50,6 @@ public class LearningContentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // 編集用のエンドポイント
     @PutMapping("/{id}")
     public ResponseEntity<LearningContentEntity> updateLearningContent(
             @PathVariable Long id, @RequestBody LearningContentEntity newContent) {
@@ -53,6 +60,7 @@ public class LearningContentController {
             existingContent.setTitle(newContent.getTitle());
             existingContent.setContent(newContent.getContent());
             existingContent.setCategory(newContent.getCategory());
+            existingContent.setUser(newContent.getUser());
             learningContentService.saveContent(existingContent);
             return ResponseEntity.ok(existingContent);
         } else {

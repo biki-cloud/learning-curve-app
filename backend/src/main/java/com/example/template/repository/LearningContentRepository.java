@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.example.template.entity.LearningContentEntity;
+import com.example.template.entity.UserEntity;
 
 @Repository
 public interface LearningContentRepository extends JpaRepository<LearningContentEntity, Long> {
 
     // カテゴリーでフィルタリングするためのカスタムクエリメソッド
     List<LearningContentEntity> findByCategory(String category);
+
+    // ユーザーごとのコンテンツを取得するためのカスタムクエリメソッド
+    List<LearningContentEntity> findByUser(UserEntity user);
 }

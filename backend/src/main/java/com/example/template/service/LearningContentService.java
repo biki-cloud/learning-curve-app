@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.template.entity.LearningContentEntity;
+import com.example.template.entity.UserEntity;
 import com.example.template.repository.LearningContentRepository;
 
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.Optional;
 
 @Service
 public class LearningContentService {
-        
     
         @Autowired
         private LearningContentRepository learningContentRepository;
@@ -27,6 +27,10 @@ public class LearningContentService {
     
         public List<LearningContentEntity> getContentsByCategory(String category) {
             return learningContentRepository.findByCategory(category);
+        }
+    
+        public List<LearningContentEntity> getContentsByUser(UserEntity user) {
+            return learningContentRepository.findByUser(user);
         }
     
         public LearningContentEntity saveContent(LearningContentEntity content) {
