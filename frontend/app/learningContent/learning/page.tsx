@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import {
   fetchLearningCurveContents,
   LearningContent,
+  updateLearningContent,
 } from "@/components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
@@ -28,7 +29,6 @@ export default function LearningCurvePage() {
     const loadContents = async () => {
       if (userId !== null) {
         const data = await fetchLearningCurveContents(userId);
-        console.log(data);
         setLearningContents(data);
         if (data.length > 0) {
           setCurrentContent(data[0]);
@@ -39,7 +39,19 @@ export default function LearningCurvePage() {
   }, [userId]);
 
   const handleNext = async () => {
-    if (userId !== null) {
+    if (userId !== null && currentContent) {
+      // レビュー回数やlastreviewDateを変更するためのPUTリクエスト
+      const updatedContent = {
+        ...currentContent,
+        lastReviewedDate: new Date().toISOString(),
+        reviewCount: currentContent.reviewCount + 1,
+      };
+      const updatedDate = await updateLearningContent(
+        currentContent.id!,
+        updatedContent
+      );
+
+      // 次のコンテンツを取得
       const data = await fetchLearningCurveContents(userId);
       setLearningContents(data);
       console.log(data);

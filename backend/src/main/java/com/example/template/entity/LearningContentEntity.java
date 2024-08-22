@@ -44,4 +44,19 @@ public class LearningContentEntity {
 
     @Column(nullable = false)
     private int level = 1;
+
+    @Override
+    public String toString() {
+        return "LearningContentEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", category='" + category + '\'' +
+                ", user=" + user +
+                ", createdDate=" + createdDate +
+                ", lastReviewedDate=" + lastReviewedDate +
+                ", reviewCount=" + reviewCount +
+                ", level=" + level +
+                '}';
+    }
 }

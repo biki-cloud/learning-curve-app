@@ -1,6 +1,8 @@
 package com.example.template.learningCurveStrategy;
 
 import com.example.template.entity.LearningContentEntity;
+
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Primary
 public class SimpleLearningCurveStrategy implements LearningCurveStrategy {
 
     @Override

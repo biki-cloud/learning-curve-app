@@ -68,6 +68,8 @@ public class LearningContentController {
             existingContent.setContent(newContent.getContent());
             existingContent.setCategory(newContent.getCategory());
             existingContent.setUser(newContent.getUser());
+            existingContent.setLastReviewedDate(newContent.getLastReviewedDate());
+            existingContent.setReviewCount(newContent.getReviewCount());
             learningContentService.saveContent(existingContent);
             return ResponseEntity.ok(existingContent);
         } else {
