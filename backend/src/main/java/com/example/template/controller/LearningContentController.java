@@ -48,7 +48,7 @@ public class LearningContentController {
     public List<LearningContentEntity> getContentsByLearningCurve(
             @PathVariable Long userId,
             @RequestParam(required = false) String category,
-            @RequestParam(required = false, defaultValue = "random") String strategyType) { // デフ���ルト戦略を指定
+            @RequestParam(required = false, defaultValue = "random") String strategyType) { // デフルト戦略を指定
         UserEntity user = new UserEntity();
         user.setId(userId);
         
@@ -66,10 +66,10 @@ public class LearningContentController {
         
         List<LearningContentEntity> allContents = learningContentService.getContentsByLearningCurve(user, category, strategy);
         
-        // nextReviewDate が今日の日付の問題をフィルタリング
+        // nextReviewDate が今日の日付よりも前または今日の日付の問題をフィルタリング
         LocalDate today = LocalDate.now();
         return allContents.stream()
-                .filter(content -> content.getNextReviewDate() != null && content.getNextReviewDate().isEqual(today))
+                .filter(content -> content.getNextReviewDate() != null && !content.getNextReviewDate().isAfter(today))
                 .collect(Collectors.toList());
     }
 

@@ -83,6 +83,10 @@ export const fetchLearningCurveContents = async (
   category?: string,
   strategyType: string = "random" // デフォルト戦略を追加
 ): Promise<LearningContent[]> => {
+  console.log("fetchLearningCurveContents");
+  console.log("userId", userId);
+  console.log("category", category);
+  console.log("strategyType", strategyType);
   const endpoint = category
     ? `/learning/user/${userId}/learning-curve?category=${category}&strategyType=${strategyType}`
     : `/learning/user/${userId}/learning-curve?strategyType=${strategyType}`;
@@ -95,4 +99,12 @@ export const fetchCategories = async (): Promise<string[]> => {
 
 export const fetchStrategies = async (): Promise<string[]> => {
   return apiFetch(`/learning/strategies`, "GET");
+};
+
+export const markCorrect = async (id: number): Promise<LearningContent> => {
+  return apiFetch(`/learning/${id}/correct`, "POST");
+};
+
+export const markIncorrect = async (id: number): Promise<LearningContent> => {
+  return apiFetch(`/learning/${id}/incorrect`, "POST");
 };

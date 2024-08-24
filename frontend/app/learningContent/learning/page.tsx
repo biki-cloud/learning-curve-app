@@ -5,7 +5,9 @@ import {
   LearningContent,
   updateLearningContent,
   fetchCategories,
-  fetchStrategies, // 学習戦略を取得する関数をインポート
+  fetchStrategies,
+  markCorrect,
+  markIncorrect,
 } from "@/components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
@@ -20,10 +22,10 @@ export default function LearningCurvePage() {
   const [userId, setUserId] = useState<number | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [strategies, setStrategies] = useState<string[]>([]); // 学習戦略の状態を追加
+  const [strategies, setStrategies] = useState<string[]>([]);
   const [selectedStrategy, setSelectedStrategy] = useState<string>(
     "RandomLearningCurveStrategy"
-  ); // デフォルト戦略を設定
+  );
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -43,7 +45,7 @@ export default function LearningCurvePage() {
 
   useEffect(() => {
     const loadStrategies = async () => {
-      const data = await fetchStrategies(); // 学習戦略を取得
+      const data = await fetchStrategies();
       setStrategies(data);
     };
     loadStrategies();
@@ -57,7 +59,7 @@ export default function LearningCurvePage() {
           userId,
           categoryQuery,
           selectedStrategy
-        ); // 選択された戦略をリクエストに追加
+        );
         setLearningContents(data);
         if (data.length > 0) {
           setCurrentContent(data[0]);
@@ -65,7 +67,7 @@ export default function LearningCurvePage() {
       }
     };
     loadContents();
-  }, [userId, selectedCategories, selectedStrategy]); // selectedStrategyを依存配列に追加
+  }, [userId, selectedCategories, selectedStrategy]);
 
   const handleNext = async () => {
     if (userId !== null && currentContent) {
@@ -81,11 +83,25 @@ export default function LearningCurvePage() {
         userId,
         categoryQuery,
         selectedStrategy
-      ); // 選択された戦略をリクエストに追加
+      );
       setLearningContents(data);
       if (data.length > 0) {
         setCurrentContent(data[0]);
       }
+    }
+  };
+
+  const handleCorrect = async () => {
+    if (currentContent) {
+      await markCorrect(currentContent.id!);
+      handleNext();
+    }
+  };
+
+  const handleIncorrect = async () => {
+    if (currentContent) {
+      await markIncorrect(currentContent.id!);
+      handleNext();
     }
   };
 
@@ -100,7 +116,7 @@ export default function LearningCurvePage() {
   const handleStrategyChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setSelectedStrategy(event.target.value); // 選択された戦略を更新
+    setSelectedStrategy(event.target.value);
   };
 
   useEffect(() => {
@@ -162,13 +178,20 @@ export default function LearningCurvePage() {
           ))}
         </select>
       </section>
-      <section className="text-center">
+      <section className="text-center mb-4">
         <Button
           variant="default"
-          onClick={handleNext}
-          className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+          onClick={handleCorrect}
+          className="bg-green-500 text-white hover:bg-green-600 transition duration-300"
         >
-          次へ
+          覚えた！
+        </Button>
+        <Button
+          variant="default"
+          onClick={handleIncorrect}
+          className="bg-red-500 text-white hover:bg-red-600 transition duration-300"
+        >
+          覚えてない！
         </Button>
       </section>
       <main>
@@ -180,7 +203,6 @@ export default function LearningCurvePage() {
             {currentContent.category}
           </p>
           <div className="bg-blue-100 p-4 rounded">
-            {" "}
             <MarkdownPreview markdownString={currentContent.content} />
           </div>
         </section>
