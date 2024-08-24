@@ -46,9 +46,15 @@ public class LearningContentService {
         learningContentRepository.deleteById(id);
     }
 
-    public List<LearningContentEntity> getContentsByLearningCurve(UserEntity user) {
-        List<LearningContentEntity> allContents = learningContentRepository.findByUser(user);
-        return learningCurveStrategy.filterByLearningCurve(allContents);
+    public List<LearningContentEntity> getContentsByLearningCurve(UserEntity user, String category) {
+        List<LearningContentEntity> allContents;
+        if (category == null || category.isEmpty()) {
+            allContents = learningContentRepository.findByUser(user);
+        } else {
+            List<String> categories = List.of(category.split(","));
+            allContents = learningContentRepository.findByUserAndCategoryIn(user, categories);
+        }
+        return allContents.isEmpty() ? allContents : learningCurveStrategy.filterByLearningCurve(allContents);
     }
     
     public List<String> getAllCategories() {

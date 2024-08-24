@@ -39,10 +39,12 @@ public class LearningContentController {
     }
 
     @GetMapping("/user/{userId}/learning-curve")
-    public List<LearningContentEntity> getContentsByLearningCurve(@PathVariable Long userId) {
+    public List<LearningContentEntity> getContentsByLearningCurve(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String category) {
         UserEntity user = new UserEntity();
         user.setId(userId);
-        return learningContentService.getContentsByLearningCurve(user);
+        return learningContentService.getContentsByLearningCurve(user, category);
     }
 
     @PostMapping

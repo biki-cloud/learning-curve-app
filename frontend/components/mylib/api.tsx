@@ -81,7 +81,11 @@ export const signin = async (data: SigninData): Promise<User> => {
 };
 
 export const fetchLearningCurveContents = async (
-  userId: number
+  userId: number,
+  category?: string
 ): Promise<LearningContent[]> => {
-  return apiFetch(`/learning/user/${userId}/learning-curve`, "GET");
+  const endpoint = category
+    ? `/learning/user/${userId}/learning-curve?category=${category}`
+    : `/learning/user/${userId}/learning-curve`;
+  return apiFetch(endpoint, "GET");
 };
