@@ -42,9 +42,6 @@ public class LearningContentEntity {
     @Column(nullable = false)
     private int reviewCount = 0;
 
-    @Column(nullable = false)
-    private int level = 1;
-
     @Override
     public String toString() {
         return "LearningContentEntity{" +
@@ -56,7 +53,6 @@ public class LearningContentEntity {
                 ", createdDate=" + createdDate +
                 ", lastReviewedDate=" + lastReviewedDate +
                 ", reviewCount=" + reviewCount +
-                ", level=" + level +
                 '}';
     }
 }
