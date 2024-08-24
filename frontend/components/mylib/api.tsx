@@ -80,11 +80,12 @@ export const signin = async (data: SigninData): Promise<User> => {
 
 export const fetchLearningCurveContents = async (
   userId: number,
-  category?: string
+  category?: string,
+  strategyType: string = "random" // デフォルト戦略を追加
 ): Promise<LearningContent[]> => {
   const endpoint = category
-    ? `/learning/user/${userId}/learning-curve?category=${category}`
-    : `/learning/user/${userId}/learning-curve`;
+    ? `/learning/user/${userId}/learning-curve?category=${category}&strategyType=${strategyType}`
+    : `/learning/user/${userId}/learning-curve?strategyType=${strategyType}`;
   return apiFetch(endpoint, "GET");
 };
 
