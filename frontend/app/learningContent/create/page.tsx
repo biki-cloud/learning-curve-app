@@ -22,6 +22,8 @@ export default function CreateLearningContent() {
     content: "",
     category: "",
     user: { id: 0, username: "", password: "", email: "" }, // 初期値を設定
+    lastReviewedDate: "", // 追加
+    reviewCount: 0, // 追加
   });
 
   const router = useRouter();
@@ -56,6 +58,8 @@ export default function CreateLearningContent() {
       content: "",
       category: "",
       user: newContent.user,
+      lastReviewedDate: "", // 追加
+      reviewCount: 0, // 追加
     });
     router.push("/learningContent/detail/" + addedContent.id);
   };

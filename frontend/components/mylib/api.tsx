@@ -10,8 +10,6 @@ export interface LearningContent {
   lastReviewedDate: string;
   // フロント側で設定
   reviewCount: number;
-  // バック側で制御
-  level: number;
 }
 
 export interface User {
