@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.template.entity.LearningContentEntity;
 import com.example.template.entity.UserEntity;
+import com.example.template.learningCurveStrategy.GetFewReviewCountLearningStrategy;
+import com.example.template.learningCurveStrategy.RandomLearningCurveStrategy;
 import com.example.template.service.LearningContentService;
 
 import java.util.List;
@@ -83,5 +85,14 @@ public class LearningContentController {
     public ResponseEntity<List<String>> getAllCategories() {
         List<String> categories = learningContentService.getAllCategories();
         return ResponseEntity.ok(categories);
+    }
+
+    @GetMapping("/strategies")
+    public ResponseEntity<List<String>> getLearningCurveStrategies() {
+        List<String> strategies = List.of(
+            new GetFewReviewCountLearningStrategy().getClass().getSimpleName(),
+            new RandomLearningCurveStrategy().getClass().getSimpleName()
+        );
+        return ResponseEntity.ok(strategies);
     }
 }

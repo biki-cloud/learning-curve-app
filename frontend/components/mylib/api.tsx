@@ -91,3 +91,7 @@ export const fetchLearningCurveContents = async (
 export const fetchCategories = async (): Promise<string[]> => {
   return apiFetch(`/learning/categories`, "GET");
 };
+
+export const fetchStrategies = async (): Promise<string[]> => {
+  return apiFetch(`/learning/strategies`, "GET");
+};
