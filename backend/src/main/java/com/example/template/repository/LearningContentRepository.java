@@ -3,6 +3,7 @@ package com.example.template.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.template.entity.LearningContentEntity;
@@ -16,4 +17,8 @@ public interface LearningContentRepository extends JpaRepository<LearningContent
 
     // ユーザーごとのコンテンツを取得するためのカスタムクエリメソッド
     List<LearningContentEntity> findByUser(UserEntity user);
+
+    // カテゴリの一覧を取得するためのカスタムクエリメソッド
+    @Query("SELECT DISTINCT category FROM LearningContentEntity")
+    List<String> findDistinctCategories();
 }

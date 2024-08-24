@@ -76,4 +76,10 @@ public class LearningContentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<String>> getAllCategories() {
+        List<String> categories = learningContentService.getAllCategories();
+        return ResponseEntity.ok(categories);
+    }
 }

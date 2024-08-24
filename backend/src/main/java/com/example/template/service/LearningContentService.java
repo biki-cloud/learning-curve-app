@@ -51,4 +51,8 @@ public class LearningContentService {
         return learningCurveStrategy.filterByLearningCurve(allContents);
     }
     
+    public List<String> getAllCategories() {
+        return learningContentRepository.findDistinctCategories();
+    }
+    
 }
