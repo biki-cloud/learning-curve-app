@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import {
   fetchLearningCurveContents,
   LearningContent,
-  updateLearningContent,
   fetchCategories,
   fetchStrategies,
   markCorrect,
@@ -71,13 +70,6 @@ export default function LearningCurvePage() {
 
   const handleNext = async () => {
     if (userId !== null && currentContent) {
-      const updatedContent = {
-        ...currentContent,
-        lastReviewedDate: new Date().toISOString(),
-        reviewCount: currentContent.reviewCount + 1,
-      };
-      await updateLearningContent(currentContent.id!, updatedContent);
-
       const categoryQuery = selectedCategories.join(",");
       const data = await fetchLearningCurveContents(
         userId,
@@ -134,7 +126,7 @@ export default function LearningCurvePage() {
   }, [currentContent, userId]);
 
   if (!currentContent) {
-    return <p>Loading...</p>;
+    return <p>本日学習する項目はありません!! Congraturations!!</p>;
   }
 
   return (
