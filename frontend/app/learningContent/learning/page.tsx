@@ -61,6 +61,21 @@ export default function LearningCurvePage() {
     }
   };
 
+  // ->キーを押したときにhandleNextを呼び出す
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight") {
+        handleNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentContent, userId]); // currentContent, userIdが変更された場合にリスナーを再登録
+
   if (!currentContent) {
     return <p>Loading...</p>;
   }
