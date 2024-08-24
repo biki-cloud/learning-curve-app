@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.template.entity.LearningContentEntity;
 import com.example.template.entity.UserEntity;
 import com.example.template.learningCurveStrategy.GetFewReviewCountLearningStrategy;
+import com.example.template.learningCurveStrategy.LearningCurveStrategy;
 import com.example.template.learningCurveStrategy.RandomLearningCurveStrategy;
 import com.example.template.service.LearningContentService;
 
@@ -20,6 +21,7 @@ public class LearningContentController {
 
     @Autowired
     private LearningContentService learningContentService;
+
 
     @GetMapping
     public List<LearningContentEntity> getAllContents() {
@@ -43,10 +45,24 @@ public class LearningContentController {
     @GetMapping("/user/{userId}/learning-curve")
     public List<LearningContentEntity> getContentsByLearningCurve(
             @PathVariable Long userId,
-            @RequestParam(required = false) String category) {
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false, defaultValue = "random") String strategyType) { // デフォルト戦略を指定
         UserEntity user = new UserEntity();
         user.setId(userId);
-        return learningContentService.getContentsByLearningCurve(user, category);
+        
+        LearningCurveStrategy strategy;
+        // 戦略の選択
+        switch (strategyType) {
+            case "GetFewReviewCountLearningStrategy":
+                strategy = new GetFewReviewCountLearningStrategy();
+                break;
+            case "RandomLearningCurveStrategy":
+            default:
+                strategy = new RandomLearningCurveStrategy();
+                break;
+        }
+        
+        return learningContentService.getContentsByLearningCurve(user, category, strategy);
     }
 
     @PostMapping

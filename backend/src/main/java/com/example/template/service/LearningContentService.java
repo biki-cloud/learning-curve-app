@@ -18,9 +18,6 @@ public class LearningContentService {
     @Autowired
     private LearningContentRepository learningContentRepository;
     
-    @Autowired
-    private LearningCurveStrategy learningCurveStrategy;
-    
     public List<LearningContentEntity> getAllContents() {
         return learningContentRepository.findAll();
     }
@@ -46,7 +43,7 @@ public class LearningContentService {
         learningContentRepository.deleteById(id);
     }
 
-    public List<LearningContentEntity> getContentsByLearningCurve(UserEntity user, String category) {
+    public List<LearningContentEntity> getContentsByLearningCurve(UserEntity user, String category, LearningCurveStrategy strategy) {
         List<LearningContentEntity> allContents;
         if (category == null || category.isEmpty()) {
             allContents = learningContentRepository.findByUser(user);
@@ -54,7 +51,7 @@ public class LearningContentService {
             List<String> categories = List.of(category.split(","));
             allContents = learningContentRepository.findByUserAndCategoryIn(user, categories);
         }
-        return allContents.isEmpty() ? allContents : learningCurveStrategy.filterByLearningCurve(allContents);
+        return allContents.isEmpty() ? allContents : strategy.filterByLearningCurve(allContents);
     }
     
     public List<String> getAllCategories() {
