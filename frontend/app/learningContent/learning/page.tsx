@@ -100,24 +100,25 @@ export default function LearningCurvePage() {
     }
   };
 
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
-    );
-  };
-
-  const handleStrategyChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedStrategy(event.target.value);
-  };
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") {
-        handleNext();
+      switch (event.key) {
+        case "ArrowRight":
+          handleNext(); // 次へ
+          break;
+        case "ArrowLeft":
+          handlePrevious(); // 戻る
+          break;
+        case "ArrowUp":
+          handleCorrect(); // 覚えた
+          handleNext();
+          break;
+        case "ArrowDown":
+          handleIncorrect(); // 覚えてない
+          handleNext();
+          break;
+        default:
+          break;
       }
     };
 
@@ -135,44 +136,9 @@ export default function LearningCurvePage() {
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 text-blue-600">学��内容</h1>
+        <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容</h1>
         <p className="text-lg text-gray-600">あなたの学びをサポートします</p>
       </header>
-      <section className="text-center mb-4">
-        {categories.map((category) => (
-          <Button
-            key={category}
-            variant={
-              selectedCategories.includes(category) ? "default" : "ghost"
-            }
-            onClick={() => toggleCategory(category)}
-            className={`mx-2 transition duration-300 ease-in-out transform ${
-              selectedCategories.includes(category)
-                ? "bg-blue-500 text-white hover:bg-blue-600"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-          >
-            {category}
-          </Button>
-        ))}
-      </section>
-      <section className="text-center mb-4">
-        <label htmlFor="strategy" className="mr-2">
-          学習戦略を選択:
-        </label>
-        <select
-          id="strategy"
-          value={selectedStrategy}
-          onChange={handleStrategyChange}
-          className="border border-gray-300 rounded p-2"
-        >
-          {strategies.map((strategy) => (
-            <option key={strategy} value={strategy}>
-              {strategy}
-            </option>
-          ))}
-        </select>
-      </section>
       <main>
         <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-8">
           <h2 className="text-2xl font-semibold mb-2">
@@ -190,25 +156,25 @@ export default function LearningCurvePage() {
             onClick={handlePrevious}
             className="bg-gray-500 text-white hover:bg-gray-600 transition duration-300"
           >
-            戻る
+            戻る (←)
           </Button>
           <Button
             onClick={handleCorrect}
             className="bg-green-500 text-white hover:bg-green-600 transition duration-300"
           >
-            覚えた！
+            覚えた！ (↑)
           </Button>
           <Button
             onClick={handleIncorrect}
             className="bg-red-500 text-white hover:bg-red-600 transition duration-300"
           >
-            覚えてない！
+            覚えてない！ (↓)
           </Button>
           <Button
             onClick={handleNext}
             className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
           >
-            次へ
+            次へ (→)
           </Button>
         </section>
       </main>
