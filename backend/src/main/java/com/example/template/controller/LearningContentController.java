@@ -111,4 +111,30 @@ public class LearningContentController {
         );
         return ResponseEntity.ok(strategies);
     }
+
+    @PostMapping("/{id}/correct")
+    public ResponseEntity<LearningContentEntity> markCorrect(@PathVariable Long id) {
+        Optional<LearningContentEntity> contentOpt = learningContentService.getContentById(id);
+        if (contentOpt.isPresent()) {
+            LearningContentEntity content = contentOpt.get();
+            content.correctAnswer(); // 正解処理
+            learningContentService.saveContent(content); // 更新を保存
+            return ResponseEntity.ok(content);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/{id}/incorrect")
+    public ResponseEntity<LearningContentEntity> markIncorrect(@PathVariable Long id) {
+        Optional<LearningContentEntity> contentOpt = learningContentService.getContentById(id);
+        if (contentOpt.isPresent()) {
+            LearningContentEntity content = contentOpt.get();
+            content.incorrectAnswer(); // 不正解処理
+            learningContentService.saveContent(content); // 更新を保存
+            return ResponseEntity.ok(content);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

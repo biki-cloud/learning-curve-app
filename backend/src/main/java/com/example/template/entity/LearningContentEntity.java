@@ -42,6 +42,50 @@ public class LearningContentEntity {
     @Column(nullable = false)
     private int reviewCount = 0;
 
+    @Column(nullable = false)
+    private int correctCount = 0; // Correct count
+
+    @Column(nullable = false)
+    private int incorrectCount = 0; // Incorrect count
+
+    @Column(nullable = false)
+    private int level = 1; // Level
+
+    @Column(nullable = true)
+    private LocalDate nextReviewDate; // Next review date
+
+    // Method to handle correct answer
+    public void correctAnswer() {
+        correctCount++;
+        reviewCount++;
+        level = Math.min(level + 1, 3); // Increase level (max 3)
+        lastReviewedDate = LocalDate.now();
+        nextReviewDate = calculateNextReviewDate();
+    }
+
+    // Method to handle incorrect answer
+    public void incorrectAnswer() {
+        incorrectCount++;
+        reviewCount++;
+        level = Math.max(level - 1, 1); // Decrease level (min 1)
+        lastReviewedDate = LocalDate.now();
+        nextReviewDate = calculateNextReviewDate();
+    }
+
+    // Method to calculate next review date
+    private LocalDate calculateNextReviewDate() {
+        switch (level) {
+            case 1:
+                return LocalDate.now().plusDays(1); // Next day
+            case 2:
+                return LocalDate.now().plusDays(3); // 3 days later
+            case 3:
+                return LocalDate.now().plusWeeks(1); // 1 week later
+            default:
+                return null;
+        }
+    }
+
     @Override
     public String toString() {
         return "LearningContentEntity{" +
@@ -53,6 +97,10 @@ public class LearningContentEntity {
                 ", createdDate=" + createdDate +
                 ", lastReviewedDate=" + lastReviewedDate +
                 ", reviewCount=" + reviewCount +
+                ", correctCount=" + correctCount +
+                ", incorrectCount=" + incorrectCount +
+                ", level=" + level +
+                ", nextReviewDate=" + nextReviewDate +
                 '}';
     }
 }
