@@ -212,12 +212,6 @@ export default function LearningCurvePage() {
           >
             覚えてない！ (↓)
           </Button>
-          <Button
-            onClick={handleNext}
-            className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
-          >
-            次へ (→)
-          </Button>
         </section>
       </main>
     </div>
