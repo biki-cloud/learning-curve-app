@@ -108,14 +108,12 @@ export default function LearningCurvePage() {
     }
   };
 
-  const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const value = Array.from(
-      event.target.selectedOptions,
-      (option) => option.value
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
     );
-    setSelectedCategories(value);
   };
 
   const handleStrategyChange = (
@@ -160,18 +158,22 @@ export default function LearningCurvePage() {
       </header>
       <main>
         <section className="mb-4">
-          <label className="block mb-2">カテゴリを選択:</label>
-          <select
-            multiple
-            onChange={handleCategoryChange}
-            className="border p-2 rounded"
-          >
+          <h2 className="text-lg font-semibold mb-2">カテゴリを選択:</h2>
+          <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
-              <option key={category} value={category}>
+              <Button
+                key={category}
+                onClick={() => toggleCategory(category)}
+                className={`border p-2 rounded ${
+                  selectedCategories.includes(category)
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-black"
+                }`}
+              >
                 {category}
-              </option>
+              </Button>
             ))}
-          </select>
+          </div>
         </section>
         <section className="mb-4">
           <label className="block mb-2">戦略を選択:</label>
