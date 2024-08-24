@@ -8,6 +8,8 @@ import {
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
 
+const categories = ["work-springboot", "life", "other"]; // カテゴリーのリスト
+
 export default function LearningCurvePage() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
     []
@@ -16,6 +18,7 @@ export default function LearningCurvePage() {
     null
   );
   const [userId, setUserId] = useState<number | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -28,7 +31,8 @@ export default function LearningCurvePage() {
   useEffect(() => {
     const loadContents = async () => {
       if (userId !== null) {
-        const data = await fetchLearningCurveContents(userId);
+        const categoryQuery = selectedCategories.join(",");
+        const data = await fetchLearningCurveContents(userId, categoryQuery);
         setLearningContents(data);
         if (data.length > 0) {
           setCurrentContent(data[0]);
@@ -36,11 +40,10 @@ export default function LearningCurvePage() {
       }
     };
     loadContents();
-  }, [userId]);
+  }, [userId, selectedCategories]);
 
   const handleNext = async () => {
     if (userId !== null && currentContent) {
-      // レビュー回数やlastreviewDateを変更するためのPUTリクエスト
       const updatedContent = {
         ...currentContent,
         lastReviewedDate: new Date().toISOString(),
@@ -51,17 +54,23 @@ export default function LearningCurvePage() {
         updatedContent
       );
 
-      // 次のコンテンツを取得
-      const data = await fetchLearningCurveContents(userId);
+      const categoryQuery = selectedCategories.join(",");
+      const data = await fetchLearningCurveContents(userId, categoryQuery);
       setLearningContents(data);
-      console.log(data);
       if (data.length > 0) {
         setCurrentContent(data[0]);
       }
     }
   };
 
-  // ->キーを押したときにhandleNextを呼び出す
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowRight") {
@@ -74,7 +83,7 @@ export default function LearningCurvePage() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentContent, userId]); // currentContent, userIdが変更された場合にリスナーを再登録
+  }, [currentContent, userId]);
 
   if (!currentContent) {
     return <p>Loading...</p>;
@@ -85,6 +94,24 @@ export default function LearningCurvePage() {
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4">学習内容</h1>
       </header>
+      <section className="text-center mb-4">
+        {categories.map((category) => (
+          <Button
+            key={category}
+            variant={
+              selectedCategories.includes(category) ? "default" : "ghost"
+            }
+            onClick={() => toggleCategory(category)}
+            className={
+              selectedCategories.includes(category)
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200"
+            }
+          >
+            {category}
+          </Button>
+        ))}
+      </section>
       <section className="text-center">
         <Button variant="default" onClick={handleNext}>
           次へ
