@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import {
   fetchLearningCurveContents,
   LearningContent,
-  fetchCategories,
-  fetchStrategies,
   markCorrect,
   markIncorrect,
 } from "@/components/mylib/api";
@@ -15,16 +13,11 @@ export default function LearningCurvePage() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
     []
   );
-  const [currentContentIndex, setCurrentContentIndex] = useState<number>(0);
   const [currentContent, setCurrentContent] = useState<LearningContent | null>(
     null
   );
-  const [previousContent, setPreviousContent] =
-    useState<LearningContent | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [strategies, setStrategies] = useState<string[]>([]);
   const [selectedStrategy, setSelectedStrategy] = useState<string>(
     "RandomLearningCurveStrategy"
   );
@@ -38,28 +31,11 @@ export default function LearningCurvePage() {
   }, []);
 
   useEffect(() => {
-    const loadCategories = async () => {
-      const data = await fetchCategories();
-      setCategories(data);
-    };
-    loadCategories();
-  }, []);
-
-  useEffect(() => {
-    const loadStrategies = async () => {
-      const data = await fetchStrategies();
-      setStrategies(data);
-    };
-    loadStrategies();
-  }, []);
-
-  useEffect(() => {
     const loadContents = async () => {
       if (userId !== null) {
-        const categoryQuery = selectedCategories.join(",");
         const data = await fetchLearningCurveContents(
           userId,
-          categoryQuery,
+          selectedCategories.join(","),
           selectedStrategy
         );
         setLearningContents(data);
@@ -71,18 +47,31 @@ export default function LearningCurvePage() {
     loadContents();
   }, [userId, selectedCategories, selectedStrategy]);
 
-  const handleNext = () => {
-    if (currentContentIndex < learningContents.length - 1) {
-      setPreviousContent(currentContent);
-      setCurrentContent(learningContents[currentContentIndex + 1]);
-      setCurrentContentIndex(currentContentIndex + 1);
+  const handleNext = async () => {
+    if (currentContent) {
+      const currentIndex = learningContents.indexOf(currentContent);
+      if (currentIndex < learningContents.length - 1) {
+        setCurrentContent(learningContents[currentIndex + 1]);
+      } else {
+        // 新たにコンテンツを取得する処理
+        await fetchNewContents();
+      }
     }
   };
 
-  const handlePrevious = () => {
-    if (currentContentIndex > 0) {
-      setCurrentContent(learningContents[currentContentIndex - 1]);
-      setCurrentContentIndex(currentContentIndex - 1);
+  const fetchNewContents = async () => {
+    if (userId !== null) {
+      const data = await fetchLearningCurveContents(
+        userId,
+        selectedCategories.join(","),
+        selectedStrategy
+      );
+      setLearningContents(data);
+      if (data.length > 0) {
+        setCurrentContent(data[0]); // 新たに取得した最初のコンテンツを設定
+      } else {
+        setCurrentContent(null); // コンテンツがない場合はnullに設定
+      }
     }
   };
 
@@ -106,16 +95,11 @@ export default function LearningCurvePage() {
         case "ArrowRight":
           handleNext(); // 次へ
           break;
-        case "ArrowLeft":
-          handlePrevious(); // 戻る
-          break;
         case "ArrowUp":
           handleCorrect(); // 覚えた
-          handleNext();
           break;
         case "ArrowDown":
           handleIncorrect(); // 覚えてない
-          handleNext();
           break;
         default:
           break;
@@ -137,7 +121,7 @@ export default function LearningCurvePage() {
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容</h1>
-        <p className="text-lg text-gray-600">あなたの学びをサポートします</p>
+        <p className="text-lg text-gray-600">��なたの学びをサポートします</p>
       </header>
       <main>
         <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-8">
@@ -152,12 +136,6 @@ export default function LearningCurvePage() {
           </div>
         </section>
         <section className="text-center mb-4">
-          <Button
-            onClick={handlePrevious}
-            className="bg-gray-500 text-white hover:bg-gray-600 transition duration-300"
-          >
-            戻る (←)
-          </Button>
           <Button
             onClick={handleCorrect}
             className="bg-green-500 text-white hover:bg-green-600 transition duration-300"
