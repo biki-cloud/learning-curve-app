@@ -95,9 +95,10 @@ export default function LearningCurvePage() {
   }
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4">学習内容</h1>
+        <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容</h1>
+        <p className="text-lg text-gray-600">あなたの学びをサポートします</p>
       </header>
       <section className="text-center mb-4">
         {categories.map((category) => (
@@ -107,27 +108,31 @@ export default function LearningCurvePage() {
               selectedCategories.includes(category) ? "default" : "ghost"
             }
             onClick={() => toggleCategory(category)}
-            className={
+            className={`mx-2 transition duration-300 ease-in-out transform ${
               selectedCategories.includes(category)
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
-            }
+                ? "bg-blue-500 text-white hover:bg-blue-600"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
           >
             {category}
           </Button>
         ))}
       </section>
       <section className="text-center">
-        <Button variant="default" onClick={handleNext}>
+        <Button
+          variant="default"
+          onClick={handleNext}
+          className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+        >
           次へ
         </Button>
       </section>
       <main>
-        <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-sm mb-8">
-          <h2 className="text-2xl font-semibold mb-2">タイトル</h2>
-          <p className="text-xl text-gray-800 mb-4">{currentContent.title}</p>
-          <h3 className="text-lg font-medium mb-2">カテゴリー</h3>
-          <p className="text-base text-gray-600 mb-4">
+        <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-8">
+          <h2 className="text-2xl font-semibold mb-2">
+            {currentContent.title}
+          </h2>
+          <p className="text-xl text-gray-800 mb-4">
             {currentContent.category}
           </p>
           <h3 className="text-lg font-medium mb-2">内容</h3>
