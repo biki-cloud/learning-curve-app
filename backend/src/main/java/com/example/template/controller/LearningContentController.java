@@ -12,8 +12,10 @@ import com.example.template.learningCurveStrategy.LearningCurveStrategy;
 import com.example.template.learningCurveStrategy.RandomLearningCurveStrategy;
 import com.example.template.service.LearningContentService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/learning")
@@ -46,7 +48,7 @@ public class LearningContentController {
     public List<LearningContentEntity> getContentsByLearningCurve(
             @PathVariable Long userId,
             @RequestParam(required = false) String category,
-            @RequestParam(required = false, defaultValue = "random") String strategyType) { // デフォルト戦略を指定
+            @RequestParam(required = false, defaultValue = "random") String strategyType) { // デフ���ルト戦略を指定
         UserEntity user = new UserEntity();
         user.setId(userId);
         
@@ -62,7 +64,13 @@ public class LearningContentController {
                 break;
         }
         
-        return learningContentService.getContentsByLearningCurve(user, category, strategy);
+        List<LearningContentEntity> allContents = learningContentService.getContentsByLearningCurve(user, category, strategy);
+        
+        // nextReviewDate が今日の日付の問題をフィルタリング
+        LocalDate today = LocalDate.now();
+        return allContents.stream()
+                .filter(content -> content.getNextReviewDate() != null && content.getNextReviewDate().isEqual(today))
+                .collect(Collectors.toList());
     }
 
     @PostMapping
