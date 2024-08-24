@@ -4,7 +4,8 @@ import {
   fetchLearningCurveContents,
   LearningContent,
   updateLearningContent,
-  fetchCategories, // カテゴリーを取得する関数をインポート
+  fetchCategories,
+  fetchStrategies, // 学習戦略を取得する関数をインポート
 } from "@/components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
@@ -18,7 +19,11 @@ export default function LearningCurvePage() {
   );
   const [userId, setUserId] = useState<number | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [categories, setCategories] = useState<string[]>([]); // カテゴリーの状態を追加
+  const [categories, setCategories] = useState<string[]>([]);
+  const [strategies, setStrategies] = useState<string[]>([]); // 学習戦略の状態を追加
+  const [selectedStrategy, setSelectedStrategy] = useState<string>(
+    "RandomLearningCurveStrategy"
+  ); // デフォルト戦略を設定
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -30,17 +35,29 @@ export default function LearningCurvePage() {
 
   useEffect(() => {
     const loadCategories = async () => {
-      const data = await fetchCategories(); // カテゴリーを取得
+      const data = await fetchCategories();
       setCategories(data);
     };
     loadCategories();
   }, []);
 
   useEffect(() => {
+    const loadStrategies = async () => {
+      const data = await fetchStrategies(); // 学習戦略を取得
+      setStrategies(data);
+    };
+    loadStrategies();
+  }, []);
+
+  useEffect(() => {
     const loadContents = async () => {
       if (userId !== null) {
         const categoryQuery = selectedCategories.join(",");
-        const data = await fetchLearningCurveContents(userId, categoryQuery);
+        const data = await fetchLearningCurveContents(
+          userId,
+          categoryQuery,
+          selectedStrategy
+        ); // 選択された戦略をリクエストに追加
         setLearningContents(data);
         if (data.length > 0) {
           setCurrentContent(data[0]);
@@ -48,7 +65,7 @@ export default function LearningCurvePage() {
       }
     };
     loadContents();
-  }, [userId, selectedCategories]);
+  }, [userId, selectedCategories, selectedStrategy]); // selectedStrategyを依存配列に追加
 
   const handleNext = async () => {
     if (userId !== null && currentContent) {
@@ -60,7 +77,11 @@ export default function LearningCurvePage() {
       await updateLearningContent(currentContent.id!, updatedContent);
 
       const categoryQuery = selectedCategories.join(",");
-      const data = await fetchLearningCurveContents(userId, categoryQuery);
+      const data = await fetchLearningCurveContents(
+        userId,
+        categoryQuery,
+        selectedStrategy
+      ); // 選択された戦略をリクエストに追加
       setLearningContents(data);
       if (data.length > 0) {
         setCurrentContent(data[0]);
@@ -74,6 +95,12 @@ export default function LearningCurvePage() {
         ? prev.filter((c) => c !== category)
         : [...prev, category]
     );
+  };
+
+  const handleStrategyChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedStrategy(event.target.value); // 選択された戦略を更新
   };
 
   useEffect(() => {
@@ -117,6 +144,23 @@ export default function LearningCurvePage() {
             {category}
           </Button>
         ))}
+      </section>
+      <section className="text-center mb-4">
+        <label htmlFor="strategy" className="mr-2">
+          学習戦略を選択:
+        </label>
+        <select
+          id="strategy"
+          value={selectedStrategy}
+          onChange={handleStrategyChange}
+          className="border border-gray-300 rounded p-2"
+        >
+          {strategies.map((strategy) => (
+            <option key={strategy} value={strategy}>
+              {strategy}
+            </option>
+          ))}
+        </select>
       </section>
       <section className="text-center">
         <Button
