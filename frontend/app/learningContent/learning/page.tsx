@@ -4,11 +4,10 @@ import {
   fetchLearningCurveContents,
   LearningContent,
   updateLearningContent,
+  fetchCategories, // カテゴリーを取得する関数をインポート
 } from "@/components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
-
-const categories = ["work-springboot", "life", "other"]; // カテゴリーのリスト
 
 export default function LearningCurvePage() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
@@ -19,6 +18,7 @@ export default function LearningCurvePage() {
   );
   const [userId, setUserId] = useState<number | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]); // カテゴリーの状態を追加
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -26,6 +26,14 @@ export default function LearningCurvePage() {
       const user = JSON.parse(userData);
       setUserId(user.id);
     }
+  }, []);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await fetchCategories(); // カテゴリーを取得
+      setCategories(data);
+    };
+    loadCategories();
   }, []);
 
   useEffect(() => {
@@ -49,10 +57,7 @@ export default function LearningCurvePage() {
         lastReviewedDate: new Date().toISOString(),
         reviewCount: currentContent.reviewCount + 1,
       };
-      const updatedDate = await updateLearningContent(
-        currentContent.id!,
-        updatedContent
-      );
+      await updateLearningContent(currentContent.id!, updatedContent);
 
       const categoryQuery = selectedCategories.join(",");
       const data = await fetchLearningCurveContents(userId, categoryQuery);
@@ -117,7 +122,6 @@ export default function LearningCurvePage() {
           次へ
         </Button>
       </section>
-
       <main>
         <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-sm mb-8">
           <h2 className="text-2xl font-semibold mb-2">タイトル</h2>

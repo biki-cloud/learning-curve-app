@@ -89,3 +89,7 @@ export const fetchLearningCurveContents = async (
     : `/learning/user/${userId}/learning-curve`;
   return apiFetch(endpoint, "GET");
 };
+
+export const fetchCategories = async (): Promise<string[]> => {
+  return apiFetch(`/learning/categories`, "GET");
+};
