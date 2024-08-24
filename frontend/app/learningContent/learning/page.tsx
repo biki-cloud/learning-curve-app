@@ -5,6 +5,8 @@ import {
   LearningContent,
   markCorrect,
   markIncorrect,
+  fetchCategories,
+  fetchStrategies,
 } from "@/components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
@@ -21,6 +23,8 @@ export default function LearningCurvePage() {
   const [selectedStrategy, setSelectedStrategy] = useState<string>(
     "RandomLearningCurveStrategy"
   );
+  const [categories, setCategories] = useState<string[]>([]);
+  const [strategies, setStrategies] = useState<string[]>([]);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -28,6 +32,22 @@ export default function LearningCurvePage() {
       const user = JSON.parse(userData);
       setUserId(user.id);
     }
+  }, []);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+      setCategories(data);
+    };
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    const loadStrategies = async () => {
+      const data = await fetchStrategies();
+      setStrategies(data);
+    };
+    loadStrategies();
   }, []);
 
   useEffect(() => {
@@ -53,7 +73,6 @@ export default function LearningCurvePage() {
       if (currentIndex < learningContents.length - 1) {
         setCurrentContent(learningContents[currentIndex + 1]);
       } else {
-        // 新たにコンテンツを取得する処理
         await fetchNewContents();
       }
     }
@@ -68,9 +87,9 @@ export default function LearningCurvePage() {
       );
       setLearningContents(data);
       if (data.length > 0) {
-        setCurrentContent(data[0]); // 新たに取得した最初のコンテンツを設定
+        setCurrentContent(data[0]);
       } else {
-        setCurrentContent(null); // コンテンツがない場合はnullに設定
+        setCurrentContent(null);
       }
     }
   };
@@ -89,17 +108,33 @@ export default function LearningCurvePage() {
     }
   };
 
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const value = Array.from(
+      event.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedCategories(value);
+  };
+
+  const handleStrategyChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedStrategy(event.target.value);
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
         case "ArrowRight":
-          handleNext(); // 次へ
+          handleNext();
           break;
         case "ArrowUp":
-          handleCorrect(); // 覚えた
+          handleCorrect();
           break;
         case "ArrowDown":
-          handleIncorrect(); // 覚えてない
+          handleIncorrect();
           break;
         default:
           break;
@@ -121,9 +156,36 @@ export default function LearningCurvePage() {
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容</h1>
-        <p className="text-lg text-gray-600">��なたの学びをサポートします</p>
+        <p className="text-lg text-gray-600">あなたの学びをサポートします</p>
       </header>
       <main>
+        <section className="mb-4">
+          <label className="block mb-2">カテゴリを選択:</label>
+          <select
+            multiple
+            onChange={handleCategoryChange}
+            className="border p-2 rounded"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </section>
+        <section className="mb-4">
+          <label className="block mb-2">戦略を選択:</label>
+          <select
+            onChange={handleStrategyChange}
+            className="border p-2 rounded"
+          >
+            {strategies.map((strategy) => (
+              <option key={strategy} value={strategy}>
+                {strategy}
+              </option>
+            ))}
+          </select>
+        </section>
         <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-8">
           <h2 className="text-2xl font-semibold mb-2">
             {currentContent.title}
