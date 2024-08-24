@@ -70,6 +70,12 @@ export default function LearningCurvePage() {
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4">学習内容</h1>
       </header>
+      <section className="text-center">
+        <Button variant="default" onClick={handleNext}>
+          次へ
+        </Button>
+      </section>
+
       <main>
         <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-sm mb-8">
           <h2 className="text-2xl font-semibold mb-2">タイトル</h2>
@@ -80,11 +86,6 @@ export default function LearningCurvePage() {
           </p>
           <h3 className="text-lg font-medium mb-2">内容</h3>
           <MarkdownPreview markdownString={currentContent.content} />
-        </section>
-        <section className="text-center">
-          <Button variant="default" onClick={handleNext}>
-            次へ
-          </Button>
         </section>
       </main>
     </div>
