@@ -15,9 +15,12 @@ export default function LearningCurvePage() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
     []
   );
+  const [currentContentIndex, setCurrentContentIndex] = useState<number>(0);
   const [currentContent, setCurrentContent] = useState<LearningContent | null>(
     null
   );
+  const [previousContent, setPreviousContent] =
+    useState<LearningContent | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -68,18 +71,18 @@ export default function LearningCurvePage() {
     loadContents();
   }, [userId, selectedCategories, selectedStrategy]);
 
-  const handleNext = async () => {
-    if (userId !== null && currentContent) {
-      const categoryQuery = selectedCategories.join(",");
-      const data = await fetchLearningCurveContents(
-        userId,
-        categoryQuery,
-        selectedStrategy
-      );
-      setLearningContents(data);
-      if (data.length > 0) {
-        setCurrentContent(data[0]);
-      }
+  const handleNext = () => {
+    if (currentContentIndex < learningContents.length - 1) {
+      setPreviousContent(currentContent);
+      setCurrentContent(learningContents[currentContentIndex + 1]);
+      setCurrentContentIndex(currentContentIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentContentIndex > 0) {
+      setCurrentContent(learningContents[currentContentIndex - 1]);
+      setCurrentContentIndex(currentContentIndex - 1);
     }
   };
 
@@ -132,7 +135,7 @@ export default function LearningCurvePage() {
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容</h1>
+        <h1 className="text-4xl font-bold mb-4 text-blue-600">学��内容</h1>
         <p className="text-lg text-gray-600">あなたの学びをサポートします</p>
       </header>
       <section className="text-center mb-4">
@@ -170,22 +173,6 @@ export default function LearningCurvePage() {
           ))}
         </select>
       </section>
-      <section className="text-center mb-4">
-        <Button
-          variant="default"
-          onClick={handleCorrect}
-          className="bg-green-500 text-white hover:bg-green-600 transition duration-300"
-        >
-          覚えた！
-        </Button>
-        <Button
-          variant="default"
-          onClick={handleIncorrect}
-          className="bg-red-500 text-white hover:bg-red-600 transition duration-300"
-        >
-          覚えてない！
-        </Button>
-      </section>
       <main>
         <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-8">
           <h2 className="text-2xl font-semibold mb-2">
@@ -197,6 +184,32 @@ export default function LearningCurvePage() {
           <div className="bg-blue-100 p-4 rounded">
             <MarkdownPreview markdownString={currentContent.content} />
           </div>
+        </section>
+        <section className="text-center mb-4">
+          <Button
+            onClick={handlePrevious}
+            className="bg-gray-500 text-white hover:bg-gray-600 transition duration-300"
+          >
+            戻る
+          </Button>
+          <Button
+            onClick={handleCorrect}
+            className="bg-green-500 text-white hover:bg-green-600 transition duration-300"
+          >
+            覚えた！
+          </Button>
+          <Button
+            onClick={handleIncorrect}
+            className="bg-red-500 text-white hover:bg-red-600 transition duration-300"
+          >
+            覚えてない！
+          </Button>
+          <Button
+            onClick={handleNext}
+            className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+          >
+            次へ
+          </Button>
         </section>
       </main>
     </div>
