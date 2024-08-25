@@ -21,7 +21,7 @@ export default function LearningCurvePage() {
   const [userId, setUserId] = useState<number | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedStrategy, setSelectedStrategy] = useState<string>(
-    "RandomLearningCurveStrategy"
+    "DefaultLearningCurveStrategy"
   );
   const [categories, setCategories] = useState<string[]>([]);
   const [strategies, setStrategies] = useState<string[]>([]);

@@ -36,7 +36,9 @@ public class LearningContentService {
     
     public LearningContentEntity saveContent(LearningContentEntity content) {
         content.setCreatedDate(LocalDate.now());
-        content.setNextReviewDate(LocalDate.now());
+        if (content.getNextReviewDate() == null) {
+            content.setNextReviewDate(LocalDate.now());
+        }
         return learningContentRepository.save(content);
     }
     
