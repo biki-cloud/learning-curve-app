@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.template.entity.LearningContentEntity;
 import com.example.template.entity.UserEntity;
+import com.example.template.learningCurveStrategy.DefaultLearningCurveStrategy;
 import com.example.template.learningCurveStrategy.GetFewReviewCountLearningStrategy;
 import com.example.template.learningCurveStrategy.LearningCurveStrategy;
 import com.example.template.learningCurveStrategy.RandomLearningCurveStrategy;
@@ -58,6 +59,9 @@ public class LearningContentController {
             case "GetFewReviewCountLearningStrategy":
                 strategy = new GetFewReviewCountLearningStrategy();
                 break;
+            case "DefaultLearningCurveStrategy":
+                strategy = new DefaultLearningCurveStrategy();
+                break;
             case "RandomLearningCurveStrategy":
             default:
                 strategy = new RandomLearningCurveStrategy();
@@ -65,12 +69,7 @@ public class LearningContentController {
         }
         
         List<LearningContentEntity> allContents = learningContentService.getContentsByLearningCurve(user, category, strategy);
-        
-        // nextReviewDate が今日の日付よりも前または今日の日付の問題をフィルタリング
-        LocalDate today = LocalDate.now();
-        return allContents.stream()
-                .filter(content -> content.getNextReviewDate() != null && !content.getNextReviewDate().isAfter(today))
-                .collect(Collectors.toList());
+        return  allContents;
     }
 
     @PostMapping
@@ -115,7 +114,8 @@ public class LearningContentController {
     public ResponseEntity<List<String>> getLearningCurveStrategies() {
         List<String> strategies = List.of(
             new GetFewReviewCountLearningStrategy().getClass().getSimpleName(),
-            new RandomLearningCurveStrategy().getClass().getSimpleName()
+            new RandomLearningCurveStrategy().getClass().getSimpleName(),
+            new DefaultLearningCurveStrategy().getClass().getSimpleName()
         );
         return ResponseEntity.ok(strategies);
     }

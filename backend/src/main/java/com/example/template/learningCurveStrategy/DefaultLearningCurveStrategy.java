@@ -2,20 +2,21 @@ package com.example.template.learningCurveStrategy;
 
 import com.example.template.entity.LearningContentEntity;
 
-import org.springframework.stereotype.Component;
-
-import java.util.Comparator;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 @Component
-public class GetFewReviewCountLearningStrategy implements LearningCurveStrategy {
+public class DefaultLearningCurveStrategy implements LearningCurveStrategy {
 
     @Override
     public List<LearningContentEntity> filterByLearningCurve(List<LearningContentEntity> contents) {
+        LocalDate today = LocalDate.now();
         return contents.stream()
-                .sorted(Comparator.comparingInt(LearningContentEntity::getReviewCount))
-                .limit(5) // 例えば、5件を返す
+                .filter(content -> content.getNextReviewDate() != null && !content.getNextReviewDate().isAfter(today))
                 .collect(Collectors.toList());
     }
+    
 }
