@@ -44,7 +44,8 @@ export default function LearningCurvePage() {
 
   useEffect(() => {
     const loadStrategies = async () => {
-      const data = await fetchStrategies();
+      //   const data = await fetchStrategies();
+      const data = ["DefaultLearningCurveStrategy"];
       setStrategies(data);
     };
     loadStrategies();
