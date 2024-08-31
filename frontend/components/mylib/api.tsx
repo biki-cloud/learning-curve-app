@@ -108,3 +108,7 @@ export const markCorrect = async (id: number): Promise<LearningContent> => {
 export const markIncorrect = async (id: number): Promise<LearningContent> => {
   return apiFetch(`/learning/${id}/incorrect`, "POST");
 };
+
+export const deleteLearningContent = async (id: number): Promise<void> => {
+  return apiFetch(`/learning/${id}`, "DELETE");
+};

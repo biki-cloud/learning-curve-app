@@ -6,6 +6,7 @@ import {
   fetchLearningContent,
   updateLearningContent,
   LearningContent,
+  deleteLearningContent,
 } from "@/components/mylib/api";
 import "easymde/dist/easymde.min.css";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,13 @@ export default function EditLearningContent({ params }: Props) {
     if (learningContent) {
       await updateLearningContent(parseInt(id), learningContent);
       router.push("/learningContent/detail/" + id);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (learningContent) {
+      await deleteLearningContent(parseInt(id));
+      router.push("/learningContent/list");
     }
   };
 
@@ -107,6 +115,13 @@ export default function EditLearningContent({ params }: Props) {
       </div>
       <div className="text-center">
         <Button type="submit">更新</Button>
+        <Button
+          type="button"
+          onClick={handleDelete}
+          className="mt-4 bg-red-500 text-white"
+        >
+          削除
+        </Button>
       </div>
     </form>
   );
