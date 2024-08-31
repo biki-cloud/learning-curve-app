@@ -10,6 +10,7 @@ import {
 } from "@/components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
+import Link from "next/link";
 
 export default function LearningCurvePage() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
@@ -213,6 +214,12 @@ export default function LearningCurvePage() {
           >
             覚えてない！ (↓)
           </Button>
+          {/* 編集ボタンを追加 */}
+          <Link href={`/learningContent/edit/${currentContent.id}`}>
+            <Button className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300">
+              編集
+            </Button>
+          </Link>
         </section>
       </main>
     </div>
