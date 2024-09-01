@@ -54,19 +54,21 @@ export default function ListLearningContent() {
   });
 
   return (
-    <div className="p-8 space-y-8">
-      <header className="text-center">
-        <h1 className="text-4xl font-bold mb-4">学習内容リスト</h1>
+    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
+      <header className="text-center mb-8">
+        <h1 className="text-4xl font-bold mb-4 text-blue-600">
+          学習内容リスト
+        </h1>
         <input
           type="text"
           placeholder="フリーワード検索"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <select
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">全てのカテゴリ</option>
           {categories.map((category) => (
@@ -84,14 +86,15 @@ export default function ListLearningContent() {
               key={content.id}
               passHref
             >
-              <Card className="max-w-sm mx-auto cursor-pointer hover:shadow-lg">
+              <Card className="max-w-sm mx-auto cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105">
                 <CardHeader>
-                  <CardTitle>{content.title}</CardTitle>
+                  <CardTitle className="text-lg font-semibold text-gray-800">
+                    {content.title}
+                  </CardTitle>
                 </CardHeader>
-                {/* <CardContent>
-                  <p>{content.content}</p>
+                <CardContent>
                   <p className="text-sm text-gray-500">{content.category}</p>
-                </CardContent> */}
+                </CardContent>
               </Card>
             </Link>
           ))}
