@@ -112,3 +112,9 @@ export const markIncorrect = async (id: number): Promise<LearningContent> => {
 export const deleteLearningContent = async (id: number): Promise<void> => {
   return apiFetch(`/learning/${id}`, "DELETE");
 };
+
+export const searchLearningContents = async (
+  term: string
+): Promise<LearningContent[]> => {
+  return apiFetch(`/learning/search?term=${term}`, "GET");
+};

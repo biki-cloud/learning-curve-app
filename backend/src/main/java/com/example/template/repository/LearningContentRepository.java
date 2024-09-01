@@ -27,4 +27,7 @@ public interface LearningContentRepository extends JpaRepository<LearningContent
 
     // ユーザーと複数のカテゴリでフィルタリングするためのカスタムクエリメソッド
     List<LearningContentEntity> findByUserAndCategoryIn(UserEntity user, List<String> categories);
+
+    // 全てのコンテンツを取得するためのメソッド
+    List<LearningContentEntity> findAll();
 }

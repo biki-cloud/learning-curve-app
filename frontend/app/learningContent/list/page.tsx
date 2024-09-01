@@ -12,6 +12,8 @@ export default function ListLearningContent() {
     []
   );
   const [userId, setUserId] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -31,14 +33,39 @@ export default function ListLearningContent() {
     loadContents();
   }, [userId]);
 
+  const filteredContents = learningContents.filter((content) => {
+    const matchesCategory = selectedCategory
+      ? content.category === selectedCategory
+      : true;
+    const matchesSearchTerm =
+      content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      content.content.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearchTerm;
+  });
+
   return (
     <div className="p-8 space-y-8">
       <header className="text-center">
         <h1 className="text-4xl font-bold mb-4">学習内容リスト</h1>
+        <input
+          type="text"
+          placeholder="フリーワード検索"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border p-2 rounded"
+        />
+        <select
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">全てのカテゴリ</option>
+          {/* カテゴリのオプションを追加 */}
+          {/* 例: <option value="カテゴリ名">カテゴリ名</option> */}
+        </select>
       </header>
       <main>
         <section className="space-y-4 mb-8">
-          {learningContents.map((content) => (
+          {filteredContents.map((content) => (
             <Link
               href={`/learningContent/detail/${content.id}`}
               key={content.id}

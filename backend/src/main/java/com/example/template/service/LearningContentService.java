@@ -11,6 +11,7 @@ import com.example.template.repository.LearningContentRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LearningContentService {
@@ -62,6 +63,14 @@ public class LearningContentService {
     
     public List<String> getAllCategories() {
         return learningContentRepository.findDistinctCategories();
+    }
+    
+    public List<LearningContentEntity> searchContents(String searchTerm) {
+        List<LearningContentEntity> allContents = learningContentRepository.findAll();
+        return allContents.stream()
+            .filter(content -> content.getTitle().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                              content.getContent().toLowerCase().contains(searchTerm.toLowerCase()))
+            .collect(Collectors.toList());
     }
     
 }

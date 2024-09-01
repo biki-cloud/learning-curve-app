@@ -145,4 +145,9 @@ public class LearningContentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/search")
+    public List<LearningContentEntity> searchContents(@RequestParam String term) {
+        return learningContentService.searchContents(term);
+    }
 }
