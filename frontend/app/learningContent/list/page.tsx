@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import {
   fetchLearningContents,
+  fetchCategories,
   LearningContent,
 } from "../../../components/mylib/api";
 import Link from "next/link";
@@ -14,6 +15,7 @@ export default function ListLearningContent() {
   const [userId, setUserId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -32,6 +34,14 @@ export default function ListLearningContent() {
     };
     loadContents();
   }, [userId]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+      setCategories(data);
+    };
+    loadCategories();
+  }, []);
 
   const filteredContents = learningContents.filter((content) => {
     const matchesCategory = selectedCategory
@@ -59,8 +69,11 @@ export default function ListLearningContent() {
           className="border p-2 rounded"
         >
           <option value="">全てのカテゴリ</option>
-          {/* カテゴリのオプションを追加 */}
-          {/* 例: <option value="カテゴリ名">カテゴリ名</option> */}
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </select>
       </header>
       <main>
