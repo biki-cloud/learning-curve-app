@@ -114,11 +114,16 @@ export default function EditLearningContent({ params }: Props) {
         />
       </div>
       <div className="text-center">
-        <Button type="submit">更新</Button>
+        <Button
+          type="submit"
+          className="w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+        >
+          更新
+        </Button>
         <Button
           type="button"
           onClick={handleDelete}
-          className="mt-4 bg-red-500 text-white"
+          className="mt-4 w-full bg-red-500 text-white hover:bg-red-600 transition duration-300"
         >
           削除
         </Button>

@@ -65,21 +65,24 @@ export default function CreateLearningContent() {
   };
 
   return (
-    <div className="p-8 space-y-8">
-      <header className="text-center">
-        <h1 className="text-4xl font-bold mb-4">学習内容作成</h1>
+    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
+      <header className="text-center mb-8">
+        <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容作成</h1>
       </header>
       <main>
         <section>
           <h2 className="text-2xl font-semibold mb-4">新しい学習内容を追加</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 bg-white p-6 rounded-lg shadow-lg"
+          >
             <input
               type="text"
               name="title"
               placeholder="タイトル"
               value={newContent.title}
               onChange={handleTitleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <SimpleMDE onChange={handleContentChange} />
             <MarkdownPreview markdownString={newContent.content} />
@@ -89,9 +92,14 @@ export default function CreateLearningContent() {
               placeholder="カテゴリ"
               value={newContent.category}
               onChange={handleCategoryChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <Button type="submit">追加</Button>
+            <Button
+              type="submit"
+              className="w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+            >
+              追加
+            </Button>
           </form>
         </section>
       </main>
