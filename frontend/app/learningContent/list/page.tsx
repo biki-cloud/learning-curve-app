@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import {
   fetchLearningContents,
   fetchCategories,
+  fetchDrafts,
   LearningContent,
 } from "../../../components/mylib/api";
 import Link from "next/link";
@@ -16,6 +17,7 @@ export default function ListLearningContent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
+  const [showDrafts, setShowDrafts] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -28,12 +30,14 @@ export default function ListLearningContent() {
   useEffect(() => {
     const loadContents = async () => {
       if (userId !== null) {
-        const data = await fetchLearningContents(userId);
+        const data = showDrafts
+          ? await fetchDrafts(userId)
+          : await fetchLearningContents(userId);
         setLearningContents(data);
       }
     };
     loadContents();
-  }, [userId]);
+  }, [userId, showDrafts]);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -53,12 +57,27 @@ export default function ListLearningContent() {
     return matchesCategory && matchesSearchTerm;
   });
 
+  const toggleShowDrafts = () => {
+    setShowDrafts((prev) => !prev);
+  };
+
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-blue-600">
           学習内容リスト
         </h1>
+        <button
+          onClick={toggleShowDrafts}
+          className={`mb-4 px-4 py-2 rounded-lg transition duration-300 
+            ${
+              showDrafts
+                ? "bg-red-500 text-white hover:bg-red-600"
+                : "bg-green-500 text-white hover:bg-green-600"
+            }`}
+        >
+          {showDrafts ? "ドラフトを非表示" : "ドラフトを表示"}
+        </button>
         <input
           type="text"
           placeholder="フリーワード検索"

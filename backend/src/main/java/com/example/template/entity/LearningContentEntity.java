@@ -54,6 +54,9 @@ public class LearningContentEntity {
     @Column(nullable = true)
     private LocalDate nextReviewDate; // Next review date
 
+    @Column(nullable = true)
+    private boolean isDraft = false;
+
     // Method to handle correct answer
     public void correctAnswer() {
         correctCount++;

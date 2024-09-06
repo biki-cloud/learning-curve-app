@@ -10,6 +10,7 @@ export interface LearningContent {
   lastReviewedDate: string;
   // フロント側で設定
   reviewCount: number;
+  draft: boolean;
 }
 
 export interface User {
@@ -60,6 +61,8 @@ export const fetchLearningContent = async (
 export const addLearningContent = async (
   data: LearningContent
 ): Promise<LearningContent> => {
+  console.log("addLearningContent");
+  console.log(data);
   return apiFetch("/learning", "POST", data);
 };
 
@@ -117,4 +120,10 @@ export const searchLearningContents = async (
   term: string
 ): Promise<LearningContent[]> => {
   return apiFetch(`/learning/search?term=${term}`, "GET");
+};
+
+export const fetchDrafts = async (
+  userId: number
+): Promise<LearningContent[]> => {
+  return apiFetch(`/learning/drafts/user/${userId}`, "GET");
 };

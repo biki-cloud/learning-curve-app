@@ -1,5 +1,7 @@
 package com.example.template.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ public class LearningContentController {
     @Autowired
     private LearningContentService learningContentService;
 
+    private static final Logger logger = LoggerFactory.getLogger(LearningContentController.class);
 
     @GetMapping
     public List<LearningContentEntity> getAllContents() {
@@ -74,6 +77,7 @@ public class LearningContentController {
 
     @PostMapping
     public ResponseEntity<LearningContentEntity> createContent(@RequestBody LearningContentEntity content) {
+        logger.info("Received request body: {}", content); // リクエストボディをログに出力
         LearningContentEntity savedContent = learningContentService.saveContent(content);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedContent);
     }
@@ -149,5 +153,12 @@ public class LearningContentController {
     @GetMapping("/search")
     public List<LearningContentEntity> searchContents(@RequestParam String term) {
         return learningContentService.searchContents(term);
+    }
+
+    @GetMapping("/drafts/user/{userId}")
+    public List<LearningContentEntity> getDraftsByUser(@PathVariable Long userId) {
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+        return learningContentService.getDraftsByUser(user);
     }
 }

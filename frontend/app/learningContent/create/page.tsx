@@ -24,6 +24,7 @@ export default function CreateLearningContent() {
     user: { id: 0, username: "", password: "", email: "" }, // 初期値を設定
     lastReviewedDate: "", // 追加
     reviewCount: 0, // 追加
+    draft: false, // 初期値を設定
   });
 
   const router = useRouter();
@@ -50,6 +51,10 @@ export default function CreateLearningContent() {
     setNewContent({ ...newContent, content: value });
   };
 
+  const handleDraftChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewContent({ ...newContent, draft: e.target.checked });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const addedContent = await addLearningContent(newContent);
@@ -60,6 +65,7 @@ export default function CreateLearningContent() {
       user: newContent.user,
       lastReviewedDate: "", // 追加
       reviewCount: 0, // 追加
+      draft: false, // 初期値を設定
     });
     router.push("/learningContent/detail/" + addedContent.id);
   };
@@ -94,6 +100,16 @@ export default function CreateLearningContent() {
               onChange={handleCategoryChange}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={newContent.draft}
+                  onChange={handleDraftChange}
+                />
+                ドラフトとして保存
+              </label>
+            </div>
             <Button
               type="submit"
               className="w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-300"

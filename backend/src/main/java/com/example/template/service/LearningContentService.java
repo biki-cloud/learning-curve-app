@@ -73,4 +73,8 @@ public class LearningContentService {
             .collect(Collectors.toList());
     }
     
+    public List<LearningContentEntity> getDraftsByUser(UserEntity user) {
+        return learningContentRepository.findByUserAndIsDraft(user, true);
+    }
+    
 }

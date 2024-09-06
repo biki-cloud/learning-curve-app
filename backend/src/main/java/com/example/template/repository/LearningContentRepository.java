@@ -30,4 +30,7 @@ public interface LearningContentRepository extends JpaRepository<LearningContent
 
     // 全てのコンテンツを取得するためのメソッド
     List<LearningContentEntity> findAll();
+
+    // ドラフトを取得するためのカスタムクエリメソッド
+    List<LearningContentEntity> findByUserAndIsDraft(UserEntity user, boolean isDraft);
 }

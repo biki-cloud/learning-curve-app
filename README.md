@@ -27,3 +27,7 @@ materials-icon の使い方
 setup
 $ npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
 https://mui.com/material-ui/material-icons/
+
+$ docker-compose -f docker-compose-local.yaml up
+$ docker rm <container name>
+$ docker volume prune
