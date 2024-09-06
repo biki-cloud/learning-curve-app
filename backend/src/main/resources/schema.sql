@@ -18,5 +18,6 @@ CREATE TABLE IF NOT EXISTS learning_content (
     incorrect_count INT DEFAULT 0,
     level INT DEFAULT 1,
     next_review_date DATE,
+    is_draft BOOLEAN DEFAULT true,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
