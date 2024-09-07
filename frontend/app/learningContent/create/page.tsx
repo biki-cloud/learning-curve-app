@@ -107,8 +107,14 @@ export default function CreateLearningContent() {
               onChange={handleTitleChange}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <SimpleMDE onChange={handleContentChange} />
-            <MarkdownPreview markdownString={newContent.content} />
+            <div className="flex">
+              <div className="w-1/2">
+                <SimpleMDE onChange={handleContentChange} />
+              </div>
+              <div className="w-1/2 pl-4">
+                <MarkdownPreview markdownString={newContent.content} />
+              </div>
+            </div>
             <select
               onChange={(e) => setSelectedCategory(e.target.value)}
               value={selectedCategory}

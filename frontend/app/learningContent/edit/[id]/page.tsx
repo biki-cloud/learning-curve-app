@@ -70,7 +70,7 @@ export default function EditLearningContent({ params }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-xl mx-auto p-8 space-y-6 bg-white shadow-lg rounded-lg"
+      className="max-w-3xl mx-auto p-8 space-y-6 bg-white shadow-lg rounded-lg"
     >
       <h2 className="text-2xl font-semibold text-center mb-4">
         学習内容を編集
@@ -92,13 +92,17 @@ export default function EditLearningContent({ params }: Props) {
         <label htmlFor="content" className="block text-sm font-medium mb-1">
           内容
         </label>
-        {/* SimpleMDEを使用 */}
-        <SimpleMDE
-          value={learningContent.content}
-          onChange={(value) => handleChange("content", value)}
-        />
-        {/* MarkdownPreviewを使用 */}
-        <MarkdownPreview markdownString={learningContent.content} />
+        <div className="flex">
+          <div className="w-1/2">
+            <SimpleMDE
+              value={learningContent.content}
+              onChange={(value) => handleChange("content", value)}
+            />
+          </div>
+          <div className="w-1/2 pl-4">
+            <MarkdownPreview markdownString={learningContent.content} />
+          </div>
+        </div>
       </div>
       <div>
         <label htmlFor="category" className="block text-sm font-medium mb-1">
