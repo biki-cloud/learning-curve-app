@@ -6,6 +6,7 @@ import "easymde/dist/easymde.min.css";
 import {
   addLearningContent,
   LearningContent,
+  fetchCategories,
 } from "../../../components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
@@ -27,6 +28,10 @@ export default function CreateLearningContent() {
     draft: false, // 初期値を設定
   });
 
+  const [categories, setCategories] = useState<string[]>([]);
+  const [newCategory, setNewCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   const router = useRouter();
 
   useEffect(() => {
@@ -37,6 +42,14 @@ export default function CreateLearningContent() {
         user: JSON.parse(userData),
       }));
     }
+  }, []);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+      setCategories(data);
+    };
+    loadCategories();
   }, []);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +70,11 @@ export default function CreateLearningContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const addedContent = await addLearningContent(newContent);
+    const categoryToUse = newCategory || selectedCategory;
+    const addedContent = await addLearningContent({
+      ...newContent,
+      category: categoryToUse,
+    });
     setNewContent({
       title: "",
       content: "",
@@ -92,12 +109,22 @@ export default function CreateLearningContent() {
             />
             <SimpleMDE onChange={handleContentChange} />
             <MarkdownPreview markdownString={newContent.content} />
+            <select
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              value={selectedCategory}
+            >
+              <option value="">カテゴリを選択</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
             <input
               type="text"
-              name="category"
-              placeholder="カテゴリ"
-              value={newContent.category}
-              onChange={handleCategoryChange}
+              placeholder="新しいカテゴリを追加"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <div>
