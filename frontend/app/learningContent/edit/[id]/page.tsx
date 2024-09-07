@@ -70,7 +70,7 @@ export default function EditLearningContent({ params }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-3xl mx-auto p-8 space-y-6 bg-white shadow-lg rounded-lg"
+      className="w-full mx-auto p-4 space-y-6 bg-white shadow-lg rounded-lg"
     >
       <h2 className="text-2xl font-semibold text-center mb-4">
         学習内容を編集
