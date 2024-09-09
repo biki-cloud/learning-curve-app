@@ -15,10 +15,8 @@ import com.example.template.learningCurveStrategy.LearningCurveStrategy;
 import com.example.template.learningCurveStrategy.RandomLearningCurveStrategy;
 import com.example.template.service.LearningContentService;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/learning")
