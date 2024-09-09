@@ -2,7 +2,6 @@ package com.example.template.learningCurveStrategy;
 
 import com.example.template.entity.LearningContentEntity;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
