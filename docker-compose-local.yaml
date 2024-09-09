@@ -15,8 +15,8 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - s3storage_volume:/tmp/localstack/s3
-      - "./backend/init_s3_data/scripts:/etc/localstack/init/ready.d"
-      - "./backend/init_s3_data/data:/home/localstack/data"
+      - "./backend/s3_init_data/scripts:/etc/localstack/init/ready.d"
+      - "./backend/s3_init_data/data:/home/localstack/data"
   postgresql:
     container_name: postgres
     image: postgres:15
