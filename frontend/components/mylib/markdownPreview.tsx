@@ -2,30 +2,41 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import { Marked } from "marked";
+import { markedHighlight } from "marked-highlight";
+import hljs from "highlight.js";
+// highlight.jsのスタイルシートを読み込むことで、コードブロックのカラースキーマが変わる
+// https://github.com/highlightjs/highlight.js/tree/main/src/styles
+import "highlight.js/styles/github.css"; // good
 import "katex/dist/katex.min.css";
-import styles from "./markdown.module.css"; // グローバルCSSファイルをインポート
-import getMarkDown from "./getMarkDown";
-
-import codeBlock from "./codeBlock";
+import styles from "./markdown.module.css";
 
 interface Props {
   markdownString: string;
 }
 
-// 最後はpropsからmarkdownを受け取るようにする
-const MarkdownPreview = ({ markdownString: markdownString }: Props) => {
+const MarkdownPreview = ({ markdownString }: Props) => {
+  const marked = new Marked(
+    {
+      gfm: true,
+      breaks: true,
+    },
+    markedHighlight({
+      langPrefix: "hljs language-",
+      highlight(code: string, lang: string) {
+        const language: string = hljs.getLanguage(lang) ? lang : "plaintext";
+        return hljs.highlight(code, { language }).value;
+      },
+    })
+  );
+
   return (
     <div className={styles.markdown}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkMath]}
-        rehypePlugins={[rehypeKatex]}
-        // TODO: codeblockをカスタマイズする
-        // components={{
-        //   pre: codeBlock,
-        // }}
-      >
-        {markdownString}
-      </ReactMarkdown>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: marked.parse(markdownString) as string,
+        }}
+      ></div>
     </div>
   );
 };
