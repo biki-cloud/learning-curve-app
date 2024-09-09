@@ -72,6 +72,13 @@ export default function CreateLearningContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const categoryToUse = newCategory || selectedCategory;
+
+    // カテゴリが空の場合はアラートを表示して処理を中断
+    if (!categoryToUse) {
+      alert("カテゴリを選択してください。");
+      return;
+    }
+
     const addedContent = await addLearningContent({
       ...newContent,
       category: categoryToUse,
