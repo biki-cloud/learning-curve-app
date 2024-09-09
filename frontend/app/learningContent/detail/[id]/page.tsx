@@ -36,6 +36,16 @@ export default function DetailLearningContent({ params }: Props) {
         <h1 className="text-4xl font-bold mb-4 text-blue-600">
           学習内容の詳細
         </h1>
+        <section className="text-center mb-4">
+          <Link href={`/learningContent/edit/${id}`} passHref>
+            <Button
+              variant="default"
+              className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+            >
+              編集
+            </Button>
+          </Link>
+        </section>
       </header>
       <main>
         <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-8">
@@ -48,16 +58,6 @@ export default function DetailLearningContent({ params }: Props) {
           <h3 className="text-lg font-medium mb-2">内容</h3>
           {/* MarkdownPreviewを使ってcontentを表示 */}
           <MarkdownPreview markdownString={learningContent.content} />
-        </section>
-        <section className="text-center mb-4">
-          <Link href={`/learningContent/edit/${id}`} passHref>
-            <Button
-              variant="default"
-              className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
-            >
-              編集
-            </Button>
-          </Link>
         </section>
       </main>
     </div>
