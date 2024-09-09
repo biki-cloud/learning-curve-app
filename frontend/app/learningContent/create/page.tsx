@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import "easymde/dist/easymde.min.css";
@@ -7,6 +7,7 @@ import {
   addLearningContent,
   LearningContent,
   fetchCategories,
+  uploadImage,
 } from "../../../components/mylib/api";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
@@ -87,6 +88,42 @@ export default function CreateLearningContent() {
     router.push("/learningContent/detail/" + addedContent.id);
   };
 
+  const handleDrop = async (data: any, e: { dataTransfer: { files: any } }) => {
+    const files = e.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith("image/")) {
+        const uploadedImageUrl = await uploadImage(file);
+        const backendHost = "http://localhost:8080";
+        simpleMde.codemirror.replaceSelection(
+          "![](" + backendHost + uploadedImageUrl + ")"
+        );
+      }
+    }
+  };
+
+  const handlePaste = async (
+    _data: any,
+    e: { clipboardData: { files: any } }
+  ) => {
+    const files = e.clipboardData.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith("image/")) {
+        const uploadedImageUrl = await uploadImage(file);
+        simpleMde.codemirror.replaceSelection("![](" + uploadedImageUrl + ")");
+      }
+    }
+  };
+
+  let simpleMde: { codemirror: { replaceSelection: (arg0: string) => void } };
+
+  const getInstance = (instance: {
+    codemirror: { replaceSelection: (arg0: string) => void };
+  }) => {
+    simpleMde = instance;
+  };
+
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
@@ -109,7 +146,14 @@ export default function CreateLearningContent() {
             />
             <div className="flex">
               <div className="w-1/2">
-                <SimpleMDE onChange={handleContentChange} />
+                <SimpleMDE
+                  getMdeInstance={getInstance}
+                  value={newContent.content}
+                  onChange={(value) =>
+                    setNewContent({ ...newContent, content: value })
+                  }
+                  events={{ drop: handleDrop, paste: handlePaste }}
+                />
               </div>
               <div className="w-1/2 pl-4">
                 <MarkdownPreview markdownString={newContent.content} />

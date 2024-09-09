@@ -132,3 +132,19 @@ export const fetchDrafts = async (
 ): Promise<LearningContent[]> => {
   return apiFetch(`/learning/drafts/user/${userId}`, "GET");
 };
+
+export const uploadImage = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch("http://localhost:8080/api/files/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Image upload failed: ${response.status}`);
+  }
+
+  return response.text(); // 画像のURLを返す
+};

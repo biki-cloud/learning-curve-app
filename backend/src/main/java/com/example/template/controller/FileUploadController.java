@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/api/files")
@@ -26,17 +28,34 @@ public class FileUploadController {
         }
 
         try {
+            // ファイル名をハッシュ化
+            String hashedFileName = hashFileName(file.getOriginalFilename());
+
             // 保存先のパスを作成
-            Path path = Paths.get(uploadDir + File.separator + file.getOriginalFilename());
+            Path path = Paths.get(uploadDir + File.separator + hashedFileName);
             Files.createDirectories(path.getParent()); // ディレクトリが存在しない場合は作成
             Files.write(path, file.getBytes()); // ファイルを保存
 
             // アクセス可能なURLを返す
-            String fileUrl = "/api/files/" + file.getOriginalFilename();
+            String fileUrl = "/api/files/" + hashedFileName;
             return ResponseEntity.ok(fileUrl);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ファイルのアップロードに失敗しました");
+        } catch (NoSuchAlgorithmException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ハッシュアルゴリズムのエラー");
         }
+    }
+
+    private String hashFileName(String originalFileName) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(originalFileName.getBytes());
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 
     @GetMapping("/{filename:.+}")
