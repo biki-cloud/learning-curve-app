@@ -7,6 +7,7 @@ import {
   updateLearningContent,
   LearningContent,
   deleteLearningContent,
+  uploadImage,
 } from "@/components/mylib/api";
 import "easymde/dist/easymde.min.css";
 import { Button } from "@/components/ui/button";
@@ -63,6 +64,24 @@ export default function EditLearningContent({ params }: Props) {
     }
   };
 
+  const handleDrop = async (data: any, e: { dataTransfer: { files: any } }) => {
+    const files = e.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith("image/")) {
+        const uploadedImageUrl = await uploadImage(file);
+        const backendHost = "http://localhost:8080";
+        const getUploadedImageUrl = backendHost + uploadedImageUrl;
+        if (learningContent) {
+          handleChange(
+            "content",
+            `![](${getUploadedImageUrl})` + learningContent.content
+          );
+        }
+      }
+    }
+  };
+
   if (!learningContent) {
     return <p>Loading...</p>;
   }
@@ -97,6 +116,7 @@ export default function EditLearningContent({ params }: Props) {
             <SimpleMDE
               value={learningContent.content}
               onChange={(value) => handleChange("content", value)}
+              events={{ drop: handleDrop }}
             />
           </div>
           <div className="w-1/2 pl-4">
