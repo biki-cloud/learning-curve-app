@@ -39,6 +39,11 @@ const apiFetch = async (
     body: body ? JSON.stringify(body) : undefined,
   });
 
+  // DELETEリクエストの場合はレスポンスが204になる
+  if (response.status === 204) {
+    return;
+  }
+
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
