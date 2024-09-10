@@ -93,6 +93,7 @@ public class LearningContentController {
 
         if (optionalContent.isPresent()) {
             LearningContentEntity existingContent = optionalContent.get();
+            existingContent.setDraft(newContent.isDraft());
             existingContent.setTitle(newContent.getTitle());
             existingContent.setContent(newContent.getContent());
             existingContent.setCategory(newContent.getCategory());
