@@ -2,13 +2,6 @@
 services:
   # springboot-app
   # nextjs-app
-  # localstack:
-  #   image: localstack/localstack:2.3.2
-  #   ports:
-  #     - "4566:4566"
-  #   environment:
-  #     - DEBUG=1
-  #     - DOCKER_HOST=unix:///var/run/docker.sock
   postgresql:
     container_name: postgres
     image: postgres:15
@@ -20,15 +13,5 @@ services:
       POSTGRES_DB: postgres
     ports:
       - "5432:5432"
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: adminPassword
-    ports:
-      - "8090:80"
-    depends_on:
-      - postgresql
 volumes:
   postgresql_volume:
