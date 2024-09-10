@@ -160,9 +160,7 @@ export default function EditLearningContent({ params }: Props) {
             <input
               type="checkbox"
               checked={learningContent.draft}
-              onChange={(e) =>
-                handleChange("draft", e.target.checked ? "true" : "false")
-              }
+              onChange={(e) => handleChange("draft", e.target.checked)}
               className="mr-2"
             />
             ドラフトとして保存
