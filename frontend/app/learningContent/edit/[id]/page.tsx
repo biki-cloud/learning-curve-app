@@ -40,7 +40,7 @@ export default function EditLearningContent({ params }: Props) {
     loadContent();
   }, [id]);
 
-  const handleChange = (name: keyof LearningContent, value: string) => {
+  const handleChange = (name: keyof LearningContent, value: any) => {
     if (learningContent) {
       setLearningContent({
         ...learningContent,
