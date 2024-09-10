@@ -52,7 +52,11 @@ export default function EditLearningContent({ params }: Props) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (learningContent) {
-      await updateLearningContent(parseInt(id), learningContent);
+      const updatedContent = await updateLearningContent(
+        parseInt(id),
+        learningContent
+      );
+      setLearningContent(updatedContent); // 状態を更新
       router.push("/learningContent/detail/" + id);
     }
   };
@@ -93,6 +97,7 @@ export default function EditLearningContent({ params }: Props) {
         <div className="flex justify-center space-x-4 mt-4">
           <Button
             type="submit"
+            onClick={handleSubmit}
             className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
           >
             更新
