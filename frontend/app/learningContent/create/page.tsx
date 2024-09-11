@@ -32,6 +32,7 @@ export default function CreateLearningContent() {
   const [categories, setCategories] = useState<string[]>([]);
   const [newCategory, setNewCategory] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [isNewCategory, setIsNewCategory] = useState(false);
 
   const router = useRouter();
 
@@ -57,8 +58,10 @@ export default function CreateLearningContent() {
     setNewContent({ ...newContent, title: e.target.value });
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewContent({ ...newContent, category: e.target.value });
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedCategory(value);
+    setIsNewCategory(value === "new");
   };
 
   const handleContentChange = (value: string) => {
@@ -166,24 +169,24 @@ export default function CreateLearningContent() {
                 <MarkdownPreview markdownString={newContent.content} />
               </div>
             </div>
-            <select
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              value={selectedCategory}
-            >
+            <select onChange={handleCategoryChange} value={selectedCategory}>
               <option value="">カテゴリを選択</option>
               {categories.map((category) => (
                 <option key={category} value={category}>
                   {category}
                 </option>
               ))}
+              <option value="new">新規カテゴリ</option>
             </select>
-            <input
-              type="text"
-              placeholder="新しいカテゴリを追加"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            {isNewCategory && (
+              <input
+                type="text"
+                placeholder="新しいカテゴリを追加"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
             <div>
               <label>
                 <input
