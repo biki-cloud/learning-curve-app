@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgresAdmin
+      SPRING_DATASOURCE_PASSWORD: postgresPassword
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
+    command: ["./gradlew", "bootRun"]
+
+  postgresql:
+    container_name: postgres
+    image: postgres:15
+    volumes:
+      - postgresql_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgresAdmin
+      POSTGRES_PASSWORD: postgresPassword
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    command: ["npm", "run", "dev"]
+
+volumes:
+  postgresql_volume:
