@@ -7,12 +7,32 @@
 }
 
 .markdown h1 {
-    font-size: 2em;
+    font-size: 2.5em;
     margin-bottom: 0.5em;
 }
 
 .markdown h2 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+.markdown h3 {
+    font-size: 1.75em;
+    margin-bottom: 0.5em;
+}
+
+.markdown h4 {
     font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.markdown h5 {
+    font-size: 1.25em;
+    margin-bottom: 0.5em;
+}
+
+.markdown h6 {
+    font-size: 1.1em;
     margin-bottom: 0.5em;
 }
 
