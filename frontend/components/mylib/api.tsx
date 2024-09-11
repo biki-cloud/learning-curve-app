@@ -31,6 +31,7 @@ const apiFetch = async (
   method: "GET" | "POST" | "PUT" | "DELETE",
   body?: LearningContent | User | SigninData
 ) => {
+  console.log(body);
   const response = await fetch(`http://localhost:8080/api${endpoint}`, {
     method,
     headers: {
