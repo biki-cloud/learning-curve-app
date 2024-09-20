@@ -61,7 +61,12 @@ public class LearningContentEntity {
     public void correctAnswer() {
         correctCount++;
         reviewCount++;
-        level = Math.min(level + 1, 3); // Increase level (max 3)
+        
+        // レベルアップの条件を厳しくする
+        if (correctCount % 5 == 0) { // 5回正解するごとにレベルアップ
+            level = Math.min(level + 1, 5); // Increase level (max 3)
+        }
+        
         lastReviewedDate = LocalDate.now();
         nextReviewDate = calculateNextReviewDate();
     }
@@ -70,7 +75,12 @@ public class LearningContentEntity {
     public void incorrectAnswer() {
         incorrectCount++;
         reviewCount++;
-        level = Math.max(level - 1, 1); // Decrease level (min 1)
+        
+        // レベルダウンの条件を厳しくする
+        if (incorrectCount % 3 == 0) { // 3回不正解するごとにレベルダウン
+            level = Math.max(level - 1, 1); // Decrease level (min 1)
+        }
+        
         lastReviewedDate = LocalDate.now();
         nextReviewDate = calculateNextReviewDate();
     }
@@ -84,6 +94,10 @@ public class LearningContentEntity {
                 return LocalDate.now().plusDays(3); // 3 days later
             case 3:
                 return LocalDate.now().plusWeeks(1); // 1 week later
+            case 4:
+                return LocalDate.now().plusWeeks(3); // 3 weeks later
+            case 5:
+                return LocalDate.now().plusWeeks(5); // 5 weeks later
             default:
                 return null;
         }
