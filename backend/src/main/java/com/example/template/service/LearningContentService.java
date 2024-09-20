@@ -58,6 +58,10 @@ public class LearningContentService {
             List<String> categories = List.of(category.split(","));
             allContents = learningContentRepository.findByUserAndCategoryIn(user, categories);
         }
+        // ドラフトでないコンテンツのみをフィルタリング
+        allContents = allContents.stream()
+                                 .filter(content -> !content.isDraft())
+                                 .collect(Collectors.toList());
         return allContents.isEmpty() ? allContents : strategy.filterByLearningCurve(allContents);
     }
     
