@@ -7,6 +7,19 @@
 .markdown {
     line-height: 1.6;
     font-family: 'Noto Serif JP', sans-serif;
+    /* 新しい枠線 */
+    border: 2px solid #0776f5;
+    /* 角を丸くする */
+    border-radius: 10px;
+
+    /* 内側の余白 */
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+
+    /* 影を追加 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .markdown h1 {
@@ -90,6 +103,6 @@
 .markdown h5,
 .markdown h6 {
     font-weight: bold;
-    margin-top: 0.8em;
-    margin-bottom: 0.3em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
