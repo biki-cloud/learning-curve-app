@@ -30,6 +30,12 @@ export default function DetailLearningContent({ params }: Props) {
     return <p>Loading...</p>;
   }
 
+  const handleDelete = async () => {
+    // 削除処理をここに追加
+    // await deleteLearningContent(learningContent.id);
+    // 例: router.push("/learningContent/list");
+  };
+
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
@@ -45,6 +51,12 @@ export default function DetailLearningContent({ params }: Props) {
               編集
             </Button>
           </Link>
+          <Button
+            onClick={handleDelete}
+            className="ml-4 bg-red-500 text-white hover:bg-red-600 transition duration-300"
+          >
+            削除
+          </Button>
         </section>
       </header>
       <main>
