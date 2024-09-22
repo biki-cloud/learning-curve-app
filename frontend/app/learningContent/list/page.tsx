@@ -51,7 +51,9 @@ export default function ListLearningContent() {
   const filteredContents = learningContents.filter((content) => {
     const matchesCategory =
       selectedCategories.length > 0
-        ? selectedCategories.includes(content.category)
+        ? selectedCategories.some((category) =>
+            content.category.includes(category)
+          )
         : true;
     const matchesSearchTerm =
       content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
