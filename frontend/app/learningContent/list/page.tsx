@@ -98,14 +98,14 @@ export default function ListLearningContent() {
         </select>
       </header>
       <main>
-        <section className="space-y-4 mb-8">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {filteredContents.map((content) => (
             <Link
               href={`/learningContent/detail/${content.id}`}
               key={content.id}
               passHref
             >
-              <Card className="max-w-sm mx-auto cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105">
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105">
                 <CardHeader>
                   <CardTitle className="text-lg font-semibold text-gray-800">
                     {content.title}
