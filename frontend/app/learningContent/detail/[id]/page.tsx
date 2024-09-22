@@ -1,7 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LearningContent, fetchLearningContent } from "@/components/mylib/api";
+import {
+  LearningContent,
+  fetchLearningContent,
+  deleteLearningContent,
+} from "@/components/mylib/api"; // deleteLearningContentをインポート
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MarkdownPreview from "@/components/mylib/markdownPreview"; // MarkdownPreviewをインポート
@@ -31,9 +35,14 @@ export default function DetailLearningContent({ params }: Props) {
   }
 
   const handleDelete = async () => {
-    // 削除処理をここに追加
-    // await deleteLearningContent(learningContent.id);
-    // 例: router.push("/learningContent/list");
+    try {
+      await deleteLearningContent(learningContent.id); // 削除処理を実行
+      // 削除後、リストページにリダイレクト
+      window.location.href = "/learningContent/list"; // またはrouter.push("/learningContent/list");
+    } catch (error) {
+      console.error("削除に失敗しました:", error);
+      // エラーハンドリングを追加することもできます
+    }
   };
 
   return (
