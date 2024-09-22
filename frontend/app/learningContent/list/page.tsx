@@ -5,6 +5,7 @@ import {
   fetchCategories,
   fetchDrafts,
   LearningContent,
+  deleteLearningContent,
 } from "../../../components/mylib/api";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -61,6 +62,11 @@ export default function ListLearningContent() {
     setShowDrafts((prev) => !prev);
   };
 
+  const handleDelete = async (id: number) => {
+    await deleteLearningContent(id);
+    setLearningContents((prev) => prev.filter((content) => content.id !== id));
+  };
+
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
@@ -100,22 +106,37 @@ export default function ListLearningContent() {
       <main>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {filteredContents.map((content) => (
-            <Link
-              href={`/learningContent/detail/${content.id}`}
+            <Card
               key={content.id}
-              passHref
+              className="cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105"
             >
-              <Card className="cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105">
-                <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-gray-800">
-                    {content.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500">{content.category}</p>
-                </CardContent>
-              </Card>
-            </Link>
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-gray-800">
+                  {content.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">{content.category}</p>
+                <div className="flex space-x-2 mt-2">
+                  <Link href={`/learningContent/detail/${content.id}`}>
+                    <button className="bg-blue-500 text-white px-2 py-1 rounded">
+                      詳細
+                    </button>
+                  </Link>
+                  <Link href={`/learningContent/edit/${content.id}`}>
+                    <button className="bg-yellow-500 text-white px-2 py-1 rounded">
+                      変更
+                    </button>
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(content.id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                  >
+                    削除
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </section>
       </main>
