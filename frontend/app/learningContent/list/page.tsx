@@ -16,7 +16,7 @@ export default function ListLearningContent() {
   );
   const [userId, setUserId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [showDrafts, setShowDrafts] = useState(false);
 
@@ -49,14 +49,23 @@ export default function ListLearningContent() {
   }, []);
 
   const filteredContents = learningContents.filter((content) => {
-    const matchesCategory = selectedCategory
-      ? content.category === selectedCategory
-      : true;
+    const matchesCategory =
+      selectedCategories.length > 0
+        ? selectedCategories.includes(content.category)
+        : true;
     const matchesSearchTerm =
       content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       content.content.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearchTerm;
   });
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((cat) => cat !== category)
+        : [...prev, category]
+    );
+  };
 
   const toggleShowDrafts = () => {
     setShowDrafts((prev) => !prev);
@@ -91,17 +100,21 @@ export default function ListLearningContent() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border p-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <select
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border p-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">全てのカテゴリ</option>
+        <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
-            <option key={category} value={category}>
+            <button
+              key={category}
+              onClick={() => toggleCategory(category)}
+              className={`border p-2 rounded ${
+                selectedCategories.includes(category)
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-black"
+              }`}
+            >
               {category}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
       </header>
       <main>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">

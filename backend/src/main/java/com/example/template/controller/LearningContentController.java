@@ -73,6 +73,15 @@ public class LearningContentController {
         return  allContents;
     }
 
+    @GetMapping("/user/{userId}/categories")
+    public List<LearningContentEntity> getContentsByUserAndCategories(
+            @PathVariable Long userId,
+            @RequestParam List<String> categories) {
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+        return learningContentService.getContentsByUserAndCategories(user, categories);
+    }
+
     @PostMapping
     public ResponseEntity<LearningContentEntity> createContent(@RequestBody LearningContentEntity content) {
         logger.info("Received request body: {}", content); // リクエストボディをログに出力

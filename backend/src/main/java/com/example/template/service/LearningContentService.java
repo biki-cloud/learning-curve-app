@@ -81,4 +81,8 @@ public class LearningContentService {
         return learningContentRepository.findByUserAndIsDraft(user, true);
     }
     
+    public List<LearningContentEntity> getContentsByUserAndCategories(UserEntity user, List<String> categories) {
+        return learningContentRepository.findByUserAndCategoryIn(user, categories);
+    }
+    
 }
