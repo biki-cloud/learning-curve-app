@@ -1,39 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif+JP');
+
 .body {
     background-color: #0070f3;
 }
 
 .markdown {
     line-height: 1.6;
+    font-family: 'Noto Serif JP', sans-serif;
 }
 
 .markdown h1 {
     font-size: 2.5em;
-    margin-bottom: 0.5em;
 }
 
 .markdown h2 {
     font-size: 2em;
-    margin-bottom: 0.5em;
 }
 
 .markdown h3 {
     font-size: 1.75em;
-    margin-bottom: 0.5em;
 }
 
 .markdown h4 {
     font-size: 1.5em;
-    margin-bottom: 0.5em;
 }
 
 .markdown h5 {
     font-size: 1.25em;
-    margin-bottom: 0.5em;
 }
 
 .markdown h6 {
     font-size: 1.1em;
-    margin-bottom: 0.5em;
 }
 
 .markdown p {
@@ -84,4 +81,15 @@
 .markdown td {
     border: 1px solid #ddd;
     padding: 0.5em;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+    font-weight: bold;
+    margin-top: 0.8em;
+    margin-bottom: 0.3em;
 }
