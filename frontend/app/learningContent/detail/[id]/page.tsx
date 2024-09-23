@@ -36,7 +36,7 @@ export default function DetailLearningContent({ params }: Props) {
 
   const handleDelete = async () => {
     try {
-      await deleteLearningContent(learningContent.id); // 削除処理を実行
+      await deleteLearningContent(learningContent.id!); // 削除処理を実行
       // 削除後、リストページにリダイレクト
       window.location.href = "/learningContent/list"; // またはrouter.push("/learningContent/list");
     } catch (error) {

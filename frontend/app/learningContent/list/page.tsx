@@ -142,7 +142,7 @@ export default function ListLearningContent() {
                     </button>
                   </Link>
                   <button
-                    onClick={() => handleDelete(content.id)}
+                    onClick={() => handleDelete(content.id!)} // ここで非nullアサーションを追加
                     className="button bg-red-500 text-white px-2 py-1 rounded"
                   >
                     削除
