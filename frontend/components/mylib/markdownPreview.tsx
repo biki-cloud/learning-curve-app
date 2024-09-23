@@ -11,8 +11,8 @@ import "katex/dist/katex.min.css";
 import styles from "./markdown.module.css";
 // highlight.jsのスタイルシートを読み込むことで、コードブロックのカラースキーマが変わる
 // https://github.com/highlightjs/highlight.js/tree/main/src/styles
-import "highlight.js/styles/github.css"; // good
-// import "highlight.js/styles/monokai.css"; // good
+// import "highlight.js/styles/atom-one-dark.css"; // good
+import "highlight.js/styles/github-dark.css"; // good
 
 interface Props {
   markdownString: string;
