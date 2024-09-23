@@ -9,6 +9,7 @@ import {
 } from "../../../components/mylib/api";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import "../../../components/mylib/button.css";
 
 export default function ListLearningContent() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
@@ -121,10 +122,7 @@ export default function ListLearningContent() {
       <main>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {filteredContents.map((content) => (
-            <Card
-              key={content.id}
-              className="cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105"
-            >
+            <Card key={content.id} className="">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-gray-800">
                   {content.title}
@@ -134,18 +132,18 @@ export default function ListLearningContent() {
                 <p className="text-sm text-gray-500">{content.category}</p>
                 <div className="flex space-x-2 mt-2">
                   <Link href={`/learningContent/detail/${content.id}`}>
-                    <button className="bg-blue-500 text-white px-2 py-1 rounded">
+                    <button className="button bg-blue-500 text-white px-2 py-1 rounded">
                       詳細
                     </button>
                   </Link>
                   <Link href={`/learningContent/edit/${content.id}`}>
-                    <button className="bg-yellow-500 text-white px-2 py-1 rounded">
+                    <button className="button bg-yellow-500 text-white px-2 py-1 rounded">
                       編集
                     </button>
                   </Link>
                   <button
                     onClick={() => handleDelete(content.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    className="button bg-red-500 text-white px-2 py-1 rounded"
                   >
                     削除
                   </button>
