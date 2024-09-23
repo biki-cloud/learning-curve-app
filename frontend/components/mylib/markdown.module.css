@@ -1,14 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif+JP');
 
-.body {
-    background-color: #0070f3;
-}
-
 .markdown {
     line-height: 1.6;
     font-family: 'Noto Serif JP', sans-serif;
     /* 新しい枠線 */
-    border: 2px solid #0776f5;
+    border: 2px solid #b2c5e2;
     /* 角を丸くする */
     border-radius: 10px;
 

@@ -197,7 +197,7 @@ export default function LearningCurvePage() {
           <p className="text-xl text-gray-800 mb-4">
             {currentContent.category}
           </p>
-          <div className="bg-blue-100 p-4 rounded">
+          <div className="bg-white-100 p-4 rounded">
             <MarkdownPreview markdownString={currentContent.content} />
           </div>
         </section>
