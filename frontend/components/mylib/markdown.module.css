@@ -51,6 +51,10 @@
     text-decoration: underline;
 }
 
+.markdown code {
+    border-radius: 3px;
+}
+
 .markdown blockquote {
     border-left: 4px solid #ddd;
     padding-left: 1em;
