@@ -5,11 +5,13 @@ import rehypeKatex from "rehype-katex";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from "highlight.js";
+import "katex/dist/katex.min.css";
+
+// markdownのスタイルを設定
+import styles from "./markdown.module.css";
 // highlight.jsのスタイルシートを読み込むことで、コードブロックのカラースキーマが変わる
 // https://github.com/highlightjs/highlight.js/tree/main/src/styles
-import "highlight.js/styles/github.css"; // good
-import "katex/dist/katex.min.css";
-import styles from "./markdown.module.css";
+// import styles from "highlight.js/styles/github.css"; // good
 
 interface Props {
   markdownString: string;
