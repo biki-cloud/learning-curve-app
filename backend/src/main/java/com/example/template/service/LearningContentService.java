@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Arrays;
 
 @Service
 public class LearningContentService {
@@ -66,7 +67,11 @@ public class LearningContentService {
     }
     
     public List<String> getAllCategories() {
-        return learningContentRepository.findDistinctCategories();
+        List<String> categories = learningContentRepository.findDistinctCategories();
+        return categories.stream()
+                         .flatMap(category -> Arrays.stream(category.split(","))) // カンマで分割
+                         .distinct() // 重複を排除
+                         .collect(Collectors.toList());
     }
     
     public List<LearningContentEntity> searchContents(String searchTerm) {
