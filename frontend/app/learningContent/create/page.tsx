@@ -33,6 +33,7 @@ export default function CreateLearningContent() {
   const [newCategory, setNewCategory] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isNewCategory, setIsNewCategory] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -74,7 +75,12 @@ export default function CreateLearningContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const categoryToUse = newCategory || selectedCategory;
+
+    // selectedCategoriesからカテゴリを取得
+    const categoryToUse =
+      selectedCategories.length > 0
+        ? selectedCategories.join(",")
+        : newCategory;
 
     // カテゴリが空の場合はアラートを表示して処理を中断
     if (!categoryToUse) {
@@ -86,6 +92,7 @@ export default function CreateLearningContent() {
       ...newContent,
       category: categoryToUse,
     });
+
     setNewContent({
       title: "",
       content: "",
@@ -95,6 +102,7 @@ export default function CreateLearningContent() {
       reviewCount: 0, // 追加
       draft: false, // 初期値を設定
     });
+
     router.push("/learningContent/detail/" + addedContent.id);
   };
 
@@ -134,6 +142,14 @@ export default function CreateLearningContent() {
     simpleMde = instance;
   };
 
+  const handleToggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((cat) => cat !== category)
+        : [...prev, category]
+    );
+  };
+
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
@@ -169,24 +185,22 @@ export default function CreateLearningContent() {
                 <MarkdownPreview markdownString={newContent.content} />
               </div>
             </div>
-            <select onChange={handleCategoryChange} value={selectedCategory}>
-              <option value="">カテゴリを選択</option>
+            <div className="flex flex-wrap gap-2">
               {categories.map((category) => (
-                <option key={category} value={category}>
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => handleToggleCategory(category)}
+                  className={`border p-2 rounded ${
+                    selectedCategories.includes(category)
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-black"
+                  }`}
+                >
                   {category}
-                </option>
+                </button>
               ))}
-              <option value="new">新規カテゴリ</option>
-            </select>
-            {isNewCategory && (
-              <input
-                type="text"
-                placeholder="新しいカテゴリを追加"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            )}
+            </div>
             <div>
               <label>
                 <input
