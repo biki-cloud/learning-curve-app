@@ -157,6 +157,24 @@ export default function EditLearningContent({ params }: Props) {
             className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
+
+        <div>
+          <label htmlFor="content" className="block text-sm font-medium mb-1">
+            内容
+          </label>
+          <div className="flex">
+            <div className="w-1/2">
+              <SimpleMDE
+                value={learningContent.content}
+                onChange={(value) => handleChange("content", value)}
+                events={{ drop: handleDrop }}
+              />
+            </div>
+            <div className="w-1/2 pl-4">
+              <MarkdownPreview markdownString={learningContent.content} />
+            </div>
+          </div>
+        </div>
         <div>
           <label className="block text-sm font-medium mb-1">カテゴリ</label>
           <div className="flex flex-wrap gap-2 mb-4">
@@ -207,23 +225,6 @@ export default function EditLearningContent({ params }: Props) {
               </Button>
             </div>
           )}
-        </div>
-        <div>
-          <label htmlFor="content" className="block text-sm font-medium mb-1">
-            内容
-          </label>
-          <div className="flex">
-            <div className="w-1/2">
-              <SimpleMDE
-                value={learningContent.content}
-                onChange={(value) => handleChange("content", value)}
-                events={{ drop: handleDrop }}
-              />
-            </div>
-            <div className="w-1/2 pl-4">
-              <MarkdownPreview markdownString={learningContent.content} />
-            </div>
-          </div>
         </div>
         <div>
           <label className="flex items-center">
