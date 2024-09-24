@@ -34,6 +34,7 @@ export default function CreateLearningContent() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isNewCategory, setIsNewCategory] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [showCategoryInput, setShowCategoryInput] = useState(false);
 
   const router = useRouter();
 
@@ -150,6 +151,16 @@ export default function CreateLearningContent() {
     );
   };
 
+  const handleAddCategory = () => {
+    if (newCategory.trim()) {
+      setCategories((prev) => [...prev, newCategory]);
+      setNewCategory("");
+      setShowCategoryInput(false);
+    } else {
+      alert("カテゴリ名を入力してください。");
+    }
+  };
+
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="text-center mb-8">
@@ -200,7 +211,39 @@ export default function CreateLearningContent() {
                   {category}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={() => setShowCategoryInput(true)}
+                className="border p-2 rounded bg-green-500 text-white"
+              >
+                カテゴリ追加
+              </button>
             </div>
+            {showCategoryInput && (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  placeholder="新しいカテゴリ名"
+                  className="border p-2 rounded"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddCategory}
+                  className="border p-2 rounded bg-blue-500 text-white"
+                >
+                  決定
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCategoryInput(false)}
+                  className="border p-2 rounded bg-red-500 text-white"
+                >
+                  キャンセル
+                </button>
+              </div>
+            )}
             <div>
               <label>
                 <input
