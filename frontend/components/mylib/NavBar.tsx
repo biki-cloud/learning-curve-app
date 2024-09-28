@@ -11,6 +11,8 @@ import { User } from "@/components/mylib/api";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 
 const items = [
   {
@@ -42,6 +44,7 @@ const items = [
 
 const NavBar = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [isOpen, setIsOpen] = useState(true); // サイドバーの開閉状態
   const pathname = usePathname();
 
   useEffect(() => {
@@ -54,32 +57,47 @@ const NavBar = () => {
     loadUser();
   }, []);
 
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen); // サイドバーの開閉をトグル
+  };
+
   return (
-    <div className="w-48 h-screen bg-gray-100 p-4">
-      {user && (
-        <div className="mb-4 p-2 bg-white rounded shadow">
-          <p className="font-bold">{user.username}</p>
-          <p className="text-sm text-gray-600">{user.email}</p>
-        </div>
+    <div
+      className={`w-${
+        isOpen ? "48" : "0"
+      } h-screen bg-gray-100 p-4 transition-width duration-300`}
+    >
+      <button onClick={toggleSidebar} className="mb-4 flex items-center">
+        {isOpen ? <ArrowCircleLeftIcon /> : <ArrowCircleRightIcon />}
+      </button>
+      {isOpen && (
+        <>
+          {user && (
+            <div className="mb-4 p-2 bg-white rounded shadow">
+              <p className="font-bold">{user.username}</p>
+              <p className="text-sm text-gray-600">{user.email}</p>
+            </div>
+          )}
+          <nav className="flex flex-col space-y-2">
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  pathname === item.href
+                    ? "bg-muted hover:bg-muted"
+                    : "hover:bg-transparent hover:underline",
+                  "flex items-center justify-start"
+                )}
+              >
+                {item.icon}
+                <span className="ml-2">{item.title}</span>
+              </Link>
+            ))}
+          </nav>
+        </>
       )}
-      <nav className="flex flex-col space-y-2">
-        {items.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              buttonVariants({ variant: "ghost" }),
-              pathname === item.href
-                ? "bg-muted hover:bg-muted"
-                : "hover:bg-transparent hover:underline",
-              "flex items-center justify-start"
-            )}
-          >
-            {item.icon}
-            <span className="ml-2">{item.title}</span>
-          </Link>
-        ))}
-      </nav>
     </div>
   );
 };
