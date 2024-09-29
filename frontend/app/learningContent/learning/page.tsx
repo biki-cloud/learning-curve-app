@@ -26,6 +26,7 @@ export default function LearningCurvePage() {
   );
   const [categories, setCategories] = useState<string[]>([]);
   const [strategies, setStrategies] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // isLoading ステートを追加
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -55,6 +56,7 @@ export default function LearningCurvePage() {
   useEffect(() => {
     const loadContents = async () => {
       if (userId !== null) {
+        setIsLoading(true); // 読み込み開始
         const data = await fetchLearningCurveContents(
           userId,
           selectedCategories.join(","),
@@ -64,6 +66,7 @@ export default function LearningCurvePage() {
         if (data.length > 0) {
           setCurrentContent(data[0]);
         }
+        setIsLoading(false); // 読み込み完了
       }
     };
     loadContents();
@@ -148,8 +151,16 @@ export default function LearningCurvePage() {
     };
   }, [currentContent, userId]);
 
+  if (isLoading) {
+    return <p>読み込み中です...</p>; // 読み込み中の表示
+  }
+
+  if (learningContents.length === 0) {
+    return <p>Congratulations!!</p>;
+  }
+
   if (!currentContent) {
-    return <p>本日学習する項目はありません!! Congraturations!!</p>;
+    return <p>読み込み中です...</p>;
   }
 
   return (
