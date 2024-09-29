@@ -83,6 +83,11 @@
     padding: 0.5em;
 }
 
+.markdown img {
+    width: 40%;
+    margin: 10px;
+}
+
 .markdown h1,
 .markdown h2,
 .markdown h3,
