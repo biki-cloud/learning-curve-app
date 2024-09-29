@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function LearningCurvePage() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
@@ -156,7 +157,22 @@ export default function LearningCurvePage() {
   }
 
   if (learningContents.length === 0) {
-    return <p>Congratulations!!</p>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="image">
+          <Link href={"/"}>
+            <Image
+              src="/congratulations.jpg"
+              width={600}
+              height={600}
+              alt="pc_img"
+            />
+          </Link>
+        </div>
+        <p className="text-2xl font-bold">Congratulations!!</p>
+        <p className="text-2xl font-bold">今日の学習は全て終了しました！！</p>
+      </div>
+    );
   }
 
   if (!currentContent) {
