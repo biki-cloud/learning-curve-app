@@ -1,5 +1,20 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import { Moon, Sun, Search, Plus } from "lucide-react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import {
   fetchLearningContents,
   fetchCategories,
@@ -7,11 +22,8 @@ import {
   LearningContent,
   deleteLearningContent,
 } from "../../../components/mylib/api";
-import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import "../../../components/mylib/button.css";
 
-export default function ListLearningContent() {
+export default function ModernLearningContentList() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
     []
   );
@@ -20,6 +32,7 @@ export default function ListLearningContent() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [showDrafts, setShowDrafts] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -70,89 +83,113 @@ export default function ListLearningContent() {
     );
   };
 
-  const toggleShowDrafts = () => {
-    setShowDrafts((prev) => !prev);
-  };
-
   const handleDelete = async (id: number) => {
     await deleteLearningContent(id);
     setLearningContents((prev) => prev.filter((content) => content.id !== id));
   };
 
   return (
-    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
-      <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 text-blue-600">
-          学習内容リスト
-        </h1>
-        <button
-          onClick={toggleShowDrafts}
-          className={`mb-4 px-4 py-2 rounded-lg transition duration-300 
-            ${
-              showDrafts
-                ? "bg-red-500 text-white hover:bg-red-600"
-                : "bg-green-500 text-white hover:bg-green-600"
-            }`}
-        >
-          {showDrafts ? "ドラフトを非表示" : "ドラフトを表示"}
-        </button>
-        <input
-          type="text"
-          placeholder="フリーワード検索"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => toggleCategory(category)}
-              className={`border p-2 rounded ${
-                selectedCategories.includes(category)
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-black"
-              }`}
+    <div className="container mx-auto p-4 space-y-8">
+      <header className="flex flex-col md:flex-row justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold mb-4 md:mb-0">学習内容リスト</h1>
+        <div className="flex items-center space-x-4">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-[1.2rem] w-[1.2rem]" />
+            ) : (
+              <Moon className="h-[1.2rem] w-[1.2rem]" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+          <div className="flex items-center space-x-2">
+            <Switch
+              checked={showDrafts}
+              onCheckedChange={setShowDrafts}
+              id="draft-mode"
+            />
+            <label
+              htmlFor="draft-mode"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              {category}
-            </button>
-          ))}
+              {showDrafts ? "ドラフトを表示" : "ドラフトを非表示"}
+            </label>
+          </div>
         </div>
       </header>
-      <main>
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {filteredContents.map((content) => (
-            <Card key={content.id} className="">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-800">
-                  {content.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-500">{content.category}</p>
-                <div className="flex space-x-2 mt-2">
-                  <Link href={`/learningContent/detail/${content.id}`}>
-                    <button className="button bg-blue-500 text-white px-2 py-1 rounded">
-                      詳細
-                    </button>
-                  </Link>
-                  <Link href={`/learningContent/edit/${content.id}`}>
-                    <button className="button bg-yellow-500 text-white px-2 py-1 rounded">
-                      編集
-                    </button>
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(content.id!)} // ここで非nullアサーションを追加
-                    className="button bg-red-500 text-white px-2 py-1 rounded"
-                  >
-                    削除
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </section>
-      </main>
+
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0 md:space-x-4">
+        <div className="w-full md:w-1/2 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="フリーワード検索"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Link href="/learningContent/create">
+          <Button>
+            <Plus className="mr-2 h-4 w-4" /> 新規作成
+          </Button>
+        </Link>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-8">
+        {categories.map((category) => (
+          <Badge
+            key={category}
+            variant={
+              selectedCategories.includes(category) ? "outline" : "default"
+            }
+            className="cursor-pointer"
+            onClick={() => toggleCategory(category)}
+          >
+            {category}
+          </Badge>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredContents.map((content) => (
+          <Card key={content.id} className="flex flex-col">
+            <CardHeader>
+              <CardTitle>{content.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex-grow">
+              <Badge variant="secondary">{content.category}</Badge>
+              <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                {content.content}
+              </p>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Link href={`/learningContent/detail/${content.id}`}>
+                <Button variant="outline" size="sm">
+                  詳細
+                </Button>
+              </Link>
+              <div className="space-x-2">
+                <Link href={`/learningContent/edit/${content.id}`}>
+                  <Button variant="outline" size="sm">
+                    編集
+                  </Button>
+                </Link>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDelete(content.id!)}
+                >
+                  削除
+                </Button>
+              </div>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
