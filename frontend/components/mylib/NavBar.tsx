@@ -29,7 +29,11 @@ const items = [
   { title: "Signup", href: "/user/signup", icon: Smile },
 ];
 
-export default function ModernNavBar({ setIsOpen }) {
+export default function ModernNavBar({
+  setIsOpen,
+}: {
+  setIsOpen: (isOpen: boolean) => void;
+}) {
   const [user, setUser] = useState<User | null>(null);
   const [isOpen, setIsOpenState] = useState(true);
   const pathname = usePathname();
@@ -92,7 +96,10 @@ export default function ModernNavBar({ setIsOpen }) {
               <Link key={item.href} href={item.href} passHref>
                 <Button
                   variant={pathname === item.href ? "secondary" : "ghost"}
-                  className={cn("w-full justify-start", !isOpen && "px-2")}
+                  className={cn(
+                    "w-full justify-start",
+                    isOpen ? "px-0" : "px-2" // undefinedを回避
+                  )}
                 >
                   <item.icon className="h-4 w-4" />
                   {isOpen && <span className="ml-2">{item.title}</span>}
