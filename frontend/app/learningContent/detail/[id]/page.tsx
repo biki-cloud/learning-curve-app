@@ -123,20 +123,6 @@ export default function ModernDetailLearningContent({ params }: Props) {
           </CardTitle>
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <Badge variant="secondary">{learningContent.category}</Badge>
-            <div className="flex items-center">
-              <CalendarIcon className="mr-1 h-3 w-3" />
-              <time dateTime={learningContent.createdAt}>
-                {new Date(learningContent.createdAt).toLocaleDateString()}
-              </time>
-            </div>
-            {learningContent.updatedAt && (
-              <div className="flex items-center">
-                <Clock className="mr-1 h-3 w-3" />
-                <time dateTime={learningContent.updatedAt}>
-                  {new Date(learningContent.updatedAt).toLocaleDateString()}
-                </time>
-              </div>
-            )}
           </div>
         </CardHeader>
         <CardContent>
