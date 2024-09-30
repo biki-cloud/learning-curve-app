@@ -1,14 +1,37 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   LearningContent,
   fetchLearningContent,
   deleteLearningContent,
-} from "@/components/mylib/api"; // deleteLearningContentをインポート
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import MarkdownPreview from "@/components/mylib/markdownPreview"; // MarkdownPreviewをインポート
+} from "@/components/mylib/api";
+import MarkdownPreview from "@/components/mylib/markdownPreview";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "@/hooks/use-toast";
+import { CalendarIcon, Clock } from "lucide-react";
 
 interface Props {
   params: {
@@ -16,71 +39,136 @@ interface Props {
   };
 }
 
-export default function DetailLearningContent({ params }: Props) {
+export default function ModernDetailLearningContent({ params }: Props) {
   const { id } = params;
-
+  const router = useRouter();
   const [learningContent, setLearningContent] =
     useState<LearningContent | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadContent = async () => {
-      const data = await fetchLearningContent(parseInt(id));
-      setLearningContent(data);
+      try {
+        setIsLoading(true);
+        const data = await fetchLearningContent(parseInt(id));
+        setLearningContent(data);
+      } catch (err) {
+        setError("Failed to load content. Please try again.");
+        toast({
+          title: "Error",
+          description: "Failed to load content. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     };
     loadContent();
   }, [id]);
 
-  if (!learningContent) {
-    return <p>Loading...</p>;
-  }
-
   const handleDelete = async () => {
     try {
-      await deleteLearningContent(learningContent.id!); // 削除処理を実行
-      // 削除後、リストページにリダイレクト
-      window.location.href = "/learningContent/list"; // またはrouter.push("/learningContent/list");
+      await deleteLearningContent(learningContent!.id!);
+      toast({
+        title: "Success",
+        description: "Content deleted successfully.",
+      });
+      router.push("/learningContent/list");
     } catch (error) {
-      console.error("削除に失敗しました:", error);
-      // エラーハンドリングを追加することもできます
+      console.error("Failed to delete:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete content. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
+  if (isLoading) {
+    return (
+      <Card className="w-full max-w-3xl mx-auto mt-8">
+        <CardHeader>
+          <Skeleton className="h-8 w-3/4" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-2/3" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="w-full max-w-3xl mx-auto mt-8">
+        <CardContent>
+          <p className="text-center text-red-500">{error}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!learningContent) {
+    return null;
+  }
+
   return (
-    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
-      <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 text-blue-600">
-          学習内容の詳細
-        </h1>
-        <section className="text-center mb-4">
+    <div className="container mx-auto p-4">
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold">
+            {learningContent.title}
+          </CardTitle>
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <Badge variant="secondary">{learningContent.category}</Badge>
+            <div className="flex items-center">
+              <CalendarIcon className="mr-1 h-3 w-3" />
+              <time dateTime={learningContent.createdAt}>
+                {new Date(learningContent.createdAt).toLocaleDateString()}
+              </time>
+            </div>
+            {learningContent.updatedAt && (
+              <div className="flex items-center">
+                <Clock className="mr-1 h-3 w-3" />
+                <time dateTime={learningContent.updatedAt}>
+                  {new Date(learningContent.updatedAt).toLocaleDateString()}
+                </time>
+              </div>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="prose dark:prose-invert max-w-none">
+            <MarkdownPreview markdownString={learningContent.content} />
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
           <Link href={`/learningContent/edit/${id}`} passHref>
-            <Button
-              variant="default"
-              className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
-            >
-              編集
-            </Button>
+            <Button variant="outline">編集</Button>
           </Link>
-          <Button
-            onClick={handleDelete}
-            className="ml-4 bg-red-500 text-white hover:bg-red-600 transition duration-300"
-          >
-            削除
-          </Button>
-        </section>
-      </header>
-      <main>
-        <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-8">
-          <h2 className="text-2xl font-semibold mb-2">タイトル</h2>
-          <p className="text-xl text-gray-800 mb-4">{learningContent.title}</p>
-          <h3 className="text-lg font-medium mb-2">カテゴリー</h3>
-          <p className="text-base text-gray-600 mb-4">
-            {learningContent.category}
-          </p>
-          <h3 className="text-lg font-medium mb-2">内容</h3>
-          {/* MarkdownPreviewを使ってcontentを表示 */}
-          <MarkdownPreview markdownString={learningContent.content} />
-        </section>
-      </main>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">削除</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
+                <AlertDialogDescription>
+                  この操作は取り消せません。この学習内容を削除してもよろしいですか？
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>
+                  削除
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

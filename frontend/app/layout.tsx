@@ -1,5 +1,6 @@
 "use client";
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/mylib/NavBar";
@@ -24,6 +25,7 @@ export default function RootLayout({
             <main className={`flex-1 p-4 ${isOpen ? "ml-64" : "ml-0"}`}>
               {children}
             </main>
+            <Toaster />
           </div>
         </ThemeProvider>
       </body>
