@@ -1,19 +1,38 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   fetchLearningCurveContents,
   LearningContent,
   markCorrect,
   markIncorrect,
   fetchCategories,
-  fetchStrategies,
 } from "@/components/mylib/api";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowUp, ArrowDown, ArrowRight, Edit } from "lucide-react";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
-import Link from "next/link";
-import Image from "next/image";
 
-export default function LearningCurvePage() {
+export default function ModernLearningCurvePage() {
   const [learningContents, setLearningContents] = useState<LearningContent[]>(
     []
   );
@@ -22,12 +41,10 @@ export default function LearningCurvePage() {
   );
   const [userId, setUserId] = useState<number | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedStrategy, setSelectedStrategy] = useState<string>(
-    "DefaultLearningCurveStrategy"
-  );
   const [categories, setCategories] = useState<string[]>([]);
-  const [strategies, setStrategies] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // isLoading ステートを追加
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const router = useRouter();
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -46,32 +63,22 @@ export default function LearningCurvePage() {
   }, []);
 
   useEffect(() => {
-    const loadStrategies = async () => {
-      //   const data = await fetchStrategies();
-      const data = ["DefaultLearningCurveStrategy"];
-      setStrategies(data);
-    };
-    loadStrategies();
-  }, []);
-
-  useEffect(() => {
     const loadContents = async () => {
       if (userId !== null) {
-        setIsLoading(true); // 読み込み開始
+        setIsLoading(true);
         const data = await fetchLearningCurveContents(
           userId,
-          selectedCategories.join(","),
-          selectedStrategy
+          selectedCategories.join(",")
         );
         setLearningContents(data);
         if (data.length > 0) {
           setCurrentContent(data[0]);
         }
-        setIsLoading(false); // 読み込み完了
+        setIsLoading(false);
       }
     };
     loadContents();
-  }, [userId, selectedCategories, selectedStrategy]);
+  }, [userId, selectedCategories]);
 
   const handleNext = async () => {
     if (currentContent) {
@@ -88,8 +95,7 @@ export default function LearningCurvePage() {
     if (userId !== null) {
       const data = await fetchLearningCurveContents(
         userId,
-        selectedCategories.join(","),
-        selectedStrategy
+        selectedCategories.join(",")
       );
       setLearningContents(data);
       if (data.length > 0) {
@@ -122,12 +128,6 @@ export default function LearningCurvePage() {
     );
   };
 
-  const handleStrategyChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedStrategy(event.target.value);
-  };
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
@@ -153,101 +153,138 @@ export default function LearningCurvePage() {
   }, [currentContent, userId]);
 
   if (isLoading) {
-    return <p>読み込み中です...</p>; // 読み込み中の表示
-  }
-
-  if (learningContents.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="image">
-          <Link href={"/"}>
-            <Image
-              src="/congratulations.jpg"
-              width={600}
-              height={600}
-              alt="pc_img"
-            />
-          </Link>
+      <div className="container mx-auto p-4 space-y-8">
+        <Skeleton className="w-full h-12" />
+        <Skeleton className="w-full h-64" />
+        <div className="flex justify-center space-x-4">
+          <Skeleton className="w-24 h-10" />
+          <Skeleton className="w-24 h-10" />
+          <Skeleton className="w-24 h-10" />
         </div>
-        <p className="text-2xl font-bold">Congratulations!!</p>
-        <p className="text-2xl font-bold">今日の学習は全て終了しました！！</p>
       </div>
     );
   }
 
+  if (learningContents.length === 0) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-purple-100"
+      >
+        <div className="mb-8">
+          <Link href="/">
+            <Image
+              src="/congratulations.jpg"
+              width={300}
+              height={300}
+              alt="Congratulations"
+              className="rounded-full shadow-lg"
+            />
+          </Link>
+        </div>
+        <h2 className="text-4xl font-bold text-blue-600 mb-4">
+          Congratulations!
+        </h2>
+        <p className="text-2xl font-semibold text-gray-700">
+          今日の学習は全て終了しました！
+        </p>
+        <Button
+          className="mt-8"
+          onClick={() => router.push("/learningContent/list")}
+        >
+          ホームに戻る
+        </Button>
+      </motion.div>
+    );
+  }
+
   if (!currentContent) {
-    return <p>読み込み中です...</p>;
+    return (
+      <p className="text-center text-2xl font-semibold text-gray-700">
+        読み込み中です...
+      </p>
+    );
   }
 
   return (
-    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
+    <div className="container mx-auto p-4 space-y-8">
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容</h1>
         <p className="text-lg text-gray-600">あなたの学びをサポートします</p>
       </header>
       <main>
-        <section className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">カテゴリを選択:</h2>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                onClick={() => toggleCategory(category)}
-                className={`border p-2 rounded ${
-                  selectedCategories.includes(category)
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-black"
-                }`}
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-        </section>
-        <section className="mb-4">
-          <label className="block mb-2">戦略を選択:</label>
-          <select
-            onChange={handleStrategyChange}
-            className="border p-2 rounded"
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>学習設定</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h2 className="text-lg font-semibold mb-2">カテゴリを選択:</h2>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Badge
+                    key={category}
+                    variant={
+                      selectedCategories.includes(category)
+                        ? "outline"
+                        : "default"
+                    }
+                    className="cursor-pointer"
+                    onClick={() => toggleCategory(category)}
+                  >
+                    {category}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentContent.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
           >
-            {strategies.map((strategy) => (
-              <option key={strategy} value={strategy}>
-                {strategy}
-              </option>
-            ))}
-          </select>
-        </section>
-        <section className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-8">
-          <h2 className="text-2xl font-semibold mb-2">
-            {currentContent.title}
-          </h2>
-          <p className="text-xl text-gray-800 mb-4">
-            {currentContent.category}
-          </p>
-          <div className="bg-white-100 p-4 rounded">
-            <MarkdownPreview markdownString={currentContent.content} />
-          </div>
-        </section>
-        <section className="text-center mb-4">
-          <Button
-            onClick={handleCorrect}
-            className="bg-green-500 text-white hover:bg-green-600 transition duration-300"
-          >
-            覚えた！ (↑)
-          </Button>
-          <Button
-            onClick={handleIncorrect}
-            className="bg-red-500 text-white hover:bg-red-600 transition duration-300"
-          >
-            覚えてない！ (↓)
-          </Button>
-          {/* 編集ボタンを追加 */}
-          <Link href={`/learningContent/edit/${currentContent.id}`}>
-            <Button className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300">
-              編集
-            </Button>
-          </Link>
-        </section>
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle>{currentContent.title}</CardTitle>
+                <Badge>{currentContent.category}</Badge>
+              </CardHeader>
+              <CardContent>
+                <div className="prose dark:prose-invert max-w-none">
+                  <MarkdownPreview markdownString={currentContent.content} />
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-center space-x-4">
+                <Button
+                  onClick={handleCorrect}
+                  className="bg-green-400 hover:bg-green-600 text-white"
+                >
+                  <ArrowUp className="mr-2 h-4 w-4" /> 覚えた！
+                </Button>
+                <Button
+                  onClick={handleIncorrect}
+                  className="bg-red-500 hover:bg-red-600 text-white"
+                >
+                  <ArrowDown className="mr-2 h-4 w-4" /> 覚えてない！
+                </Button>
+                <Link href={`/learningContent/edit/${currentContent.id}`}>
+                  <Button className="bg-white text-blue-500 hover:bg-blue-50 border border-blue-500">
+                    <Edit className="mr-2 h-4 w-4" /> 編集
+                  </Button>
+                </Link>
+                <Button onClick={handleNext} variant="outline">
+                  次へ <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );
