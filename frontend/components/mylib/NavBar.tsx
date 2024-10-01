@@ -9,17 +9,40 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { User } from "@/components/mylib/api";
-import {
-  List,
-  Lightbulb,
-  PlusCircle,
-  UserPlus,
-  Smile,
-  ChevronLeft,
-  ChevronRight,
-  Moon,
-  Sun,
-} from "lucide-react";
+import dynamic from "next/dynamic";
+
+const List = dynamic(() => import("lucide-react").then((mod) => mod.List), {
+  ssr: false,
+});
+const Lightbulb = dynamic(
+  () => import("lucide-react").then((mod) => mod.Lightbulb),
+  { ssr: false }
+);
+const PlusCircle = dynamic(
+  () => import("lucide-react").then((mod) => mod.PlusCircle),
+  { ssr: false }
+);
+const UserPlus = dynamic(
+  () => import("lucide-react").then((mod) => mod.UserPlus),
+  { ssr: false }
+);
+const Smile = dynamic(() => import("lucide-react").then((mod) => mod.Smile), {
+  ssr: false,
+});
+const ChevronLeft = dynamic(
+  () => import("lucide-react").then((mod) => mod.ChevronLeft),
+  { ssr: false }
+);
+const ChevronRight = dynamic(
+  () => import("lucide-react").then((mod) => mod.ChevronRight),
+  { ssr: false }
+);
+const Moon = dynamic(() => import("lucide-react").then((mod) => mod.Moon), {
+  ssr: false,
+});
+const Sun = dynamic(() => import("lucide-react").then((mod) => mod.Sun), {
+  ssr: false,
+});
 
 const items = [
   { title: "一覧", href: "/learningContent/list", icon: List },
@@ -36,6 +59,7 @@ export default function ModernNavBar({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [isOpen, setIsOpenState] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
 
@@ -47,17 +71,22 @@ export default function ModernNavBar({
       }
     };
     loadUser();
+    setIsMounted(true);
   }, []);
 
   const toggleSidebar = () => {
     setIsOpenState(!isOpen);
-    setIsOpen(!isOpen); // 親コンポーネントに状態を通知
+    setIsOpen(!isOpen);
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div
       className={cn(
-        "fixed left-0 top-0 z-50 h-screen bg-background transition-all duration-300 ease-in-out", // z-indexを50に設定
+        "fixed left-0 top-0 z-50 h-screen bg-background transition-all duration-300 ease-in-out",
         isOpen ? "w-64" : "w-16"
       )}
     >
@@ -98,10 +127,10 @@ export default function ModernNavBar({
                   variant={pathname === item.href ? "secondary" : "ghost"}
                   className={cn(
                     "w-full justify-start",
-                    isOpen ? "px-0" : "px-2" // undefinedを回避
+                    isOpen ? "px-2" : "px-2"
                   )}
                 >
-                  <item.icon className="h-4 w-4" />
+                  {isMounted && <item.icon className="h-4 w-4" />}
                   {isOpen && <span className="ml-2">{item.title}</span>}
                 </Button>
               </Link>
