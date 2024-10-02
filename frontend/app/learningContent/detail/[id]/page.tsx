@@ -136,7 +136,7 @@ export default function ModernDetailLearningContent({ params }: Props) {
           </Link>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive">削除</Button>
+              <Button variant="outline">削除</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
