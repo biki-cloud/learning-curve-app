@@ -87,7 +87,7 @@ export default function ModernNavBar({
     <div
       className={cn(
         "fixed left-0 top-0 z-50 h-screen bg-background transition-all duration-300 ease-in-out",
-        isOpen ? "w-64" : "w-16"
+        isOpen ? "w-64" : "w-20"
       )}
     >
       <div className="flex h-full flex-col justify-between p-3">
@@ -95,13 +95,13 @@ export default function ModernNavBar({
           <Button
             variant="ghost"
             size="icon"
-            className="mb-4 w-full justify-start"
+            className="mb-4 w-full justify-center"
             onClick={toggleSidebar}
           >
             {isOpen ? (
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-6 w-6" />
             ) : (
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-6 w-6" />
             )}
           </Button>
           {user && isOpen && (
@@ -120,18 +120,22 @@ export default function ModernNavBar({
               </div>
             </div>
           )}
-          <nav className="space-y-1">
+          <nav className="space-y-2">
             {items.map((item) => (
               <Link key={item.href} href={item.href} passHref>
                 <Button
                   variant={pathname === item.href ? "secondary" : "ghost"}
                   className={cn(
-                    "w-full justify-start",
-                    isOpen ? "px-2" : "px-2"
+                    "w-full",
+                    isOpen ? "justify-start px-3" : "justify-center px-0"
                   )}
                 >
-                  {isMounted && <item.icon className="h-4 w-4" />}
-                  {isOpen && <span className="ml-2">{item.title}</span>}
+                  {isMounted && (
+                    <item.icon
+                      className={cn("h-5 w-5", isOpen ? "mr-2" : "mr-0")}
+                    />
+                  )}
+                  {isOpen && <span>{item.title}</span>}
                 </Button>
               </Link>
             ))}
@@ -143,14 +147,17 @@ export default function ModernNavBar({
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            className="w-full justify-start"
+            className={cn(
+              "w-full",
+              isOpen ? "justify-start px-3" : "justify-center px-0"
+            )}
           >
             {theme === "light" ? (
-              <Moon className="h-4 w-4" />
+              <Moon className={cn("h-5 w-5", isOpen ? "mr-2" : "mr-0")} />
             ) : (
-              <Sun className="h-4 w-4" />
+              <Sun className={cn("h-5 w-5", isOpen ? "mr-2" : "mr-0")} />
             )}
-            {isOpen && <span className="ml-2">テーマ切替</span>}
+            {isOpen && <span>テーマ切替</span>}
           </Button>
         </div>
       </div>
