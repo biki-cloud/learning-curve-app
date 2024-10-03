@@ -4,9 +4,6 @@
     line-height: 1.8;
     font-family: 'Noto Sans JP', sans-serif;
     color: #333;
-    background-color: #fff;
-    border: 1px solid #e0e7ff;
-    border-radius: 12px;
     padding: 2rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     max-width: 800px;
