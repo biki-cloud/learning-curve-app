@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   fetchLearningContent,
@@ -12,13 +12,25 @@ import {
 } from "@/components/mylib/api";
 import "easymde/dist/easymde.min.css";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import dynamic from "next/dynamic";
 import MarkdownPreview from "@/components/mylib/markdownPreview";
+import { PlusCircle, Save, Trash2 } from "lucide-react";
 
-// SimpleMDEを遅延読み込み
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
-  loading: () => <p>Loading editor...</p>,
+  loading: () => <p>エディターを読み込み中...</p>,
 });
 
 interface Props {
@@ -41,18 +53,16 @@ export default function EditLearningContent({ params }: Props) {
     const loadContent = async () => {
       const data = await fetchLearningContent(parseInt(id));
       setLearningContent(data);
-      setSelectedCategories(data.category.split(",")); // カテゴリを配列に変換
+      setSelectedCategories(data.category.split(","));
     };
     loadContent();
-  }, [id]);
 
-  useEffect(() => {
     const loadCategories = async () => {
       const data = await fetchCategories();
       setCategories(data);
     };
     loadCategories();
-  }, []);
+  }, [id]);
 
   const handleChange = (name: keyof LearningContent, value: any) => {
     if (learningContent) {
@@ -74,6 +84,7 @@ export default function EditLearningContent({ params }: Props) {
   const handleAddCategory = () => {
     if (newCategory.trim()) {
       setCategories((prev) => [...prev, newCategory]);
+      setSelectedCategories((prev) => [...prev, newCategory]);
       setNewCategory("");
       setShowCategoryInput(false);
     } else {
@@ -84,17 +95,20 @@ export default function EditLearningContent({ params }: Props) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (learningContent) {
-      const updatedContent = await updateLearningContent(
-        parseInt(id),
-        { ...learningContent, category: selectedCategories.join(",") } // 選択したカテゴリを更新
-      );
+      const updatedContent = await updateLearningContent(parseInt(id), {
+        ...learningContent,
+        category: selectedCategories.join(","),
+      });
       setLearningContent(updatedContent);
       router.push("/learningContent/detail/" + id);
     }
   };
 
   const handleDelete = async () => {
-    if (learningContent) {
+    if (
+      learningContent &&
+      window.confirm("本当にこの学習内容を削除しますか？")
+    ) {
       await deleteLearningContent(parseInt(id));
       router.push("/learningContent/list");
     }
@@ -119,125 +133,122 @@ export default function EditLearningContent({ params }: Props) {
   };
 
   if (!learningContent) {
-    return <p>Loading...</p>;
+    return <p>読み込み中...</p>;
   }
 
   return (
-    <div className="p-8 space-y-8 bg-white shadow-lg rounded-lg">
-      <header className="text-center mb-4">
-        <h2 className="text-2xl font-semibold">学習内容を編集</h2>
-        <div className="flex justify-center space-x-4 mt-4">
-          <Button
-            type="submit"
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
-          >
+    <div className="container mx-auto px-4 py-8">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">
+            学習内容を編集
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="title">タイトル</Label>
+              <Input
+                id="title"
+                type="text"
+                value={learningContent.title}
+                onChange={(e) => handleChange("title", e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="content">内容</Label>
+              <Tabs defaultValue="edit" className="w-full">
+                <TabsList>
+                  <TabsTrigger value="edit">編集</TabsTrigger>
+                  <TabsTrigger value="preview">プレビュー</TabsTrigger>
+                </TabsList>
+                <TabsContent value="edit">
+                  <SimpleMDE
+                    value={learningContent.content}
+                    onChange={(value) => handleChange("content", value)}
+                    events={{ drop: handleDrop }}
+                  />
+                </TabsContent>
+                <TabsContent value="preview">
+                  <div className="border rounded-md p-4 min-h-[300px] prose max-w-none">
+                    <MarkdownPreview markdownString={learningContent.content} />
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            <div className="space-y-2">
+              <Label>カテゴリ</Label>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Badge
+                    key={category}
+                    variant={
+                      selectedCategories.includes(category)
+                        ? "outline"
+                        : "default"
+                    }
+                    className="cursor-pointer"
+                    onClick={() => handleCategoryToggle(category)}
+                  >
+                    {category}
+                  </Badge>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowCategoryInput(true)}
+                >
+                  <PlusCircle className="w-4 h-4 mr-2" />
+                  新しいカテゴリ
+                </Button>
+              </div>
+              {showCategoryInput && (
+                <div className="flex items-center gap-2 mt-2">
+                  <Input
+                    type="text"
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    placeholder="新しいカテゴリ名"
+                    className="flex-grow"
+                  />
+                  <Button type="button" onClick={handleAddCategory}>
+                    追加
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowCategoryInput(false)}
+                  >
+                    キャンセル
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="draft"
+                checked={learningContent.draft}
+                onCheckedChange={(checked) => handleChange("draft", checked)}
+              />
+              <Label htmlFor="draft">ドラフトとして保存</Label>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button type="submit" onClick={handleSubmit} variant="outline">
+            <Save className="w-4 h-4 mr-2" />
             更新
           </Button>
-          <Button
-            type="button"
-            onClick={handleDelete}
-            className="bg-red-500 text-white hover:bg-red-600 transition duration-300"
-          >
+          <Button type="button" variant="outline" onClick={handleDelete}>
+            <Trash2 className="w-4 h-4 mr-2" />
             削除
           </Button>
-        </div>
-      </header>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium mb-1">
-            タイトル
-          </label>
-          <input
-            id="title"
-            type="text"
-            name="title"
-            value={learningContent.title}
-            onChange={(e) => handleChange("title", e.target.value)}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="content" className="block text-sm font-medium mb-1">
-            内容
-          </label>
-          <div className="flex">
-            <div className="w-1/2">
-              <SimpleMDE
-                value={learningContent.content}
-                onChange={(value) => handleChange("content", value)}
-                events={{ drop: handleDrop }}
-              />
-            </div>
-            <div className="w-1/2 pl-4">
-              <MarkdownPreview markdownString={learningContent.content} />
-            </div>
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">カテゴリ</label>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                type="button"
-                onClick={() => handleCategoryToggle(category)}
-                className={`border p-2 rounded ${
-                  selectedCategories.includes(category)
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-black"
-                }`}
-              >
-                {category}
-              </Button>
-            ))}
-            <Button
-              type="button"
-              onClick={() => setShowCategoryInput(true)}
-              className="border p-2 rounded bg-green-500 text-white"
-            >
-              カテゴリ追加
-            </Button>
-          </div>
-          {showCategoryInput && (
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="新しいカテゴリ名"
-                className="border p-2 rounded"
-              />
-              <Button
-                type="button"
-                onClick={handleAddCategory}
-                className="border p-2 rounded bg-blue-500 text-white"
-              >
-                決定
-              </Button>
-              <Button
-                type="button"
-                onClick={() => setShowCategoryInput(false)}
-                className="border p-2 rounded bg-red-500 text-white"
-              >
-                キャンセル
-              </Button>
-            </div>
-          )}
-        </div>
-        <div>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={learningContent.draft}
-              onChange={(e) => handleChange("draft", e.target.checked)}
-              className="mr-2"
-            />
-            ドラフトとして保存
-          </label>
-        </div>
-      </form>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
