@@ -263,7 +263,7 @@ export default function ModernLearningCurvePage() {
               <CardFooter className="flex justify-center space-x-4">
                 <Button
                   onClick={handleCorrect}
-                  className="bg-green-400 hover:bg-green-600 text-white"
+                  className="bg-blue-400 hover:bg-blue-600 text-white"
                 >
                   <ArrowUp className="mr-2 h-4 w-4" /> 覚えた！
                 </Button>
