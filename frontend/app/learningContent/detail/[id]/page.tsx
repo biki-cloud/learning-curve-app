@@ -31,7 +31,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
-import { CalendarIcon, Clock } from "lucide-react";
 
 interface Props {
   params: {
@@ -134,25 +133,11 @@ export default function ModernDetailLearningContent({ params }: Props) {
           <Link href={`/learningContent/edit/${id}`} passHref>
             <Button variant="outline">編集</Button>
           </Link>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline">削除</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
-                <AlertDialogDescription>
-                  この操作は取り消せません。この学習内容を削除してもよろしいですか？
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>
-                  削除
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <Link href={`/learningContent/list`} passHref>
+            <Button variant="outline" onClick={handleDelete}>
+              削除
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
     </div>
