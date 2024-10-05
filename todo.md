@@ -6,17 +6,25 @@
 - markdown の toolbar で detail を追記するボタンを作成したい
   - https://zenn.dev/milky/articles/nextjs-markdown
 - 作成した記事を Qiita に内容を投稿する機能
+- 記憶の定着率をグラフとかで見えるかしたい。そんなページがあると最高
 
 # なんで作ったのか？
 
 - 人は学習したことも９９%は頭から抜けていくのでせっかく学習した意味がない。
+- 覚えたいことはなんでもいいよ！！
 
 # デプロイするために
 
+## 最低限
+
 - google アカウントの作成
-- backend
-  - ec2
+- backend, DB, Storage
+  - ec2(docker-compose)
 - frontend
   - vercel
 - DB, storage
   - supabase
+
+## あると良い
+
+- domain
