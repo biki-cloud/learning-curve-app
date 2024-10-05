@@ -735,3 +735,14 @@ i.right-align {
 i.justify-align {
   background-image: url(images/icons/justify.svg);
 }
+
+
+/* lexicalのスタイルをより具体的に指定する例 これがないと正常にリストにmarkderが付かない！！*/
+.editor-list-ul {
+  list-style-type: disc !important;
+  /* 例として!importantを使用 */
+}
+
+.editor-list-ol {
+  list-style-type: decimal !important;
+}
