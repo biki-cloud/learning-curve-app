@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+summary {
+    background-color: aliceblue;
+    border-radius: 4px;
+}
