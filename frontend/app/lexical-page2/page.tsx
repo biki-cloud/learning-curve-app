@@ -16,7 +16,7 @@ import "./index.css";
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 
-import App from "./App";
+import EditorApp from "./EditorApp";
 
 if (setupEnv.disableBeforeInput) {
   // vite is really aggressive about tree-shaking, this
@@ -41,8 +41,10 @@ window.addEventListener("unhandledrejection", ({ reason }) =>
   showErrorOverlay(reason)
 );
 
-createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+export default function LexicalPage2() {
+  return (
+    <div className="App">
+      <EditorApp />
+    </div>
+  );
+}
