@@ -34,13 +34,7 @@
 
 - domain
 
----
-
-ダメだった
-
-<div className="App" style={{ all: "unset" }}>
-
----
-
-styles.css で marker をつける方法はあり。
-やってみたけどインデントとか難しくて無理だった
+- lexical でやること
+- markdown での表示
+- データを読み込み
+- データを保存
