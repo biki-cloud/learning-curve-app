@@ -11,6 +11,8 @@
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@excalidraw/excalidraw": "^0.17.6",
+    "@lexical/file": "^0.18.0",
     "@lexical/markdown": "^0.18.0",
     "@lexical/react": "^0.18.0",
     "@mui/icons-material": "^5.16.7",
@@ -35,11 +37,13 @@
     "highlight.js": "^11.10.0",
     "highlightjs": "^9.16.2",
     "lexical": "^0.18.0",
+    "lodash-es": "^4.17.21",
     "lucide-react": "^0.428.0",
     "marked": "^14.0.0",
     "marked-highlight": "^2.1.4",
     "next": "14.2.5",
     "next-themes": "^0.3.0",
+    "prettier": "^3.3.3",
     "react": "^18",
     "react-dom": "^18",
     "react-markdown": "^9.0.1",
@@ -52,7 +56,8 @@
     "shadcn": "^1.0.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "typed.js": "^2.1.0"
+    "typed.js": "^2.1.0",
+    "y-websocket": "^2.0.4"
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.5",
