@@ -97,8 +97,8 @@ export default function Editor(): JSX.Element {
   const placeholder = isCollab
     ? "Enter some collaborative rich text..."
     : isRichText
-    ? "Enter some rich text..."
-    : "Enter some plain text...";
+      ? "Enter some rich text..."
+      : "Enter some plain text...";
   const [floatingAnchorElem, setFloatingAnchorElem] =
     useState<HTMLDivElement | null>(null);
   const [isSmallWidthViewport, setIsSmallWidthViewport] =
@@ -150,9 +150,9 @@ export default function Editor(): JSX.Element {
         <KeywordsPlugin />
         <SpeechToTextPlugin />
         <AutoLinkPlugin />
-        <CommentPlugin
+        {/* <CommentPlugin
           providerFactory={isCollab ? createWebsocketProvider : undefined}
-        />
+        /> */}
         {isRichText ? (
           <>
             {isCollab ? (
@@ -244,7 +244,7 @@ export default function Editor(): JSX.Element {
           shouldPreserveNewLinesInMarkdown={shouldPreserveNewLinesInMarkdown}
         />
       </div>
-      {showTreeView && <TreeViewPlugin />}
+      {/* {showTreeView && <TreeViewPlugin />} */}
     </>
   );
 }
