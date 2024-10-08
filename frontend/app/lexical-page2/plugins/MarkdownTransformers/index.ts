@@ -17,12 +17,12 @@ import {
   TEXT_MATCH_TRANSFORMERS,
   TextMatchTransformer,
   Transformer,
-} from '@lexical/markdown';
+} from "@lexical/markdown";
 import {
   $createHorizontalRuleNode,
   $isHorizontalRuleNode,
   HorizontalRuleNode,
-} from '@lexical/react/LexicalHorizontalRuleNode';
+} from "@lexical/react/LexicalHorizontalRuleNode";
 import {
   $createTableCellNode,
   $createTableNode,
@@ -34,27 +34,52 @@ import {
   TableCellNode,
   TableNode,
   TableRowNode,
-} from '@lexical/table';
+} from "@lexical/table";
 import {
   $createTextNode,
   $isParagraphNode,
   $isTextNode,
   LexicalNode,
-} from 'lexical';
+} from "lexical";
 
 import {
   $createEquationNode,
   $isEquationNode,
   EquationNode,
-} from '../../nodes/EquationNode';
-import {$createImageNode, $isImageNode, ImageNode} from '../../nodes/ImageNode';
-import {$createTweetNode, $isTweetNode, TweetNode} from '../../nodes/TweetNode';
-import emojiList from '../../utils/emoji-list';
+} from "../../nodes/EquationNode";
+import {
+  $createImageNode,
+  $isImageNode,
+  ImageNode,
+} from "../../nodes/ImageNode";
+import {
+  $createTweetNode,
+  $isTweetNode,
+  TweetNode,
+} from "../../nodes/TweetNode";
+import emojiList from "../../utils/emoji-list";
+
+import {
+  CollapsibleContainerNode,
+  $isCollapsibleContainerNode, // この行を追加
+  $createCollapsibleContainerNode,
+} from "../CollapsiblePlugin/CollapsibleContainerNode"; // 適切なパスに変更してください
+
+import {
+  CollapsibleTitleNode,
+  $createCollapsibleTitleNode,
+} from "../CollapsiblePlugin/CollapsibleTitleNode";
+import {
+  CollapsibleContentNode,
+  $isCollapsibleContentNode,
+  $createCollapsibleContentNode,
+} from "../CollapsiblePlugin/CollapsibleContentNode";
+import { $isCollapsibleTitleNode } from "../CollapsiblePlugin/CollapsibleTitleNode";
 
 export const HR: ElementTransformer = {
   dependencies: [HorizontalRuleNode],
   export: (node: LexicalNode) => {
-    return $isHorizontalRuleNode(node) ? '***' : null;
+    return $isHorizontalRuleNode(node) ? "***" : null;
   },
   regExp: /^(---|\*\*\*|___)\s?$/,
   replace: (parentNode, _1, _2, isImport) => {
@@ -69,7 +94,7 @@ export const HR: ElementTransformer = {
 
     line.selectNext();
   },
-  type: 'element',
+  type: "element",
 };
 
 export const IMAGE: TextMatchTransformer = {
@@ -92,8 +117,8 @@ export const IMAGE: TextMatchTransformer = {
     });
     textNode.replace(imageNode);
   },
-  trigger: ')',
-  type: 'text-match',
+  trigger: ")",
+  type: "text-match",
 };
 
 export const EMOJI: TextMatchTransformer = {
@@ -107,8 +132,8 @@ export const EMOJI: TextMatchTransformer = {
       textNode.replace($createTextNode(emoji));
     }
   },
-  trigger: ':',
-  type: 'text-match',
+  trigger: ":",
+  type: "text-match",
 };
 
 export const EQUATION: TextMatchTransformer = {
@@ -127,8 +152,8 @@ export const EQUATION: TextMatchTransformer = {
     const equationNode = $createEquationNode(equation, true);
     textNode.replace(equationNode);
   },
-  trigger: '$',
-  type: 'text-match',
+  trigger: "$",
+  type: "text-match",
 };
 
 export const TWEET: ElementTransformer = {
@@ -146,7 +171,7 @@ export const TWEET: ElementTransformer = {
     const tweetNode = $createTweetNode(id);
     textNode.replace(tweetNode);
   },
-  type: 'element',
+  type: "element",
 };
 
 // Very primitive table setup
@@ -175,8 +200,8 @@ export const TABLE: ElementTransformer = {
           rowOutput.push(
             $convertToMarkdownString(PLAYGROUND_TRANSFORMERS, cell).replace(
               /\n/g,
-              '\\n',
-            ),
+              "\\n"
+            )
           );
           if (cell.__headerState === TableCellHeaderStates.ROW) {
             isHeaderRow = true;
@@ -184,13 +209,13 @@ export const TABLE: ElementTransformer = {
         }
       }
 
-      output.push(`| ${rowOutput.join(' | ')} |`);
+      output.push(`| ${rowOutput.join(" | ")} |`);
       if (isHeaderRow) {
-        output.push(`| ${rowOutput.map((_) => '---').join(' | ')} |`);
+        output.push(`| ${rowOutput.map((_) => "---").join(" | ")} |`);
       }
     }
 
-    return output.join('\n');
+    return output.join("\n");
   },
   regExp: TABLE_ROW_REG_EXP,
   replace: (parentNode, _1, match) => {
@@ -214,7 +239,7 @@ export const TABLE: ElementTransformer = {
         }
         cell.setHeaderStyles(
           TableCellHeaderStates.ROW,
-          TableCellHeaderStates.ROW,
+          TableCellHeaderStates.ROW
         );
       });
 
@@ -268,7 +293,7 @@ export const TABLE: ElementTransformer = {
       table.append(tableRow);
 
       for (let i = 0; i < maxCells; i++) {
-        tableRow.append(i < cells.length ? cells[i] : $createTableCell(''));
+        tableRow.append(i < cells.length ? cells[i] : $createTableCell(""));
       }
     }
 
@@ -285,7 +310,7 @@ export const TABLE: ElementTransformer = {
 
     table.selectEnd();
   },
-  type: 'element',
+  type: "element",
 };
 
 function getTableColumnsSize(table: TableNode) {
@@ -294,7 +319,7 @@ function getTableColumnsSize(table: TableNode) {
 }
 
 const $createTableCell = (textContent: string): TableCellNode => {
-  textContent = textContent.replace(/\\n/g, '\n');
+  textContent = textContent.replace(/\\n/g, "\n");
   const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS);
   $convertFromMarkdownString(textContent, PLAYGROUND_TRANSFORMERS, cell);
   return cell;
@@ -305,10 +330,61 @@ const mapToTableCells = (textContent: string): Array<TableCellNode> | null => {
   if (!match || !match[1]) {
     return null;
   }
-  return match[1].split('|').map((text) => $createTableCell(text));
+  return match[1].split("|").map((text) => $createTableCell(text));
 };
 
+// Collapsible Content to Markdown
+export const COLLAPSIBLE: ElementTransformer = {
+  dependencies: [
+    CollapsibleContainerNode,
+    CollapsibleTitleNode,
+    CollapsibleContentNode,
+  ],
+  export: (node: LexicalNode) => {
+    if (!$isCollapsibleContainerNode(node)) {
+      return null;
+    }
+
+    const titleNode = node.getFirstChild();
+    const contentNode = node.getLastChild();
+
+    if (
+      !$isCollapsibleTitleNode(titleNode) ||
+      !$isCollapsibleContentNode(contentNode)
+    ) {
+      return null;
+    }
+
+    const title = $convertToMarkdownString(PLAYGROUND_TRANSFORMERS, titleNode);
+    const content = $convertToMarkdownString(
+      PLAYGROUND_TRANSFORMERS,
+      contentNode
+    );
+    console.log("----------");
+    console.log(title);
+    console.log(content);
+
+    return `<details><summary>${title}</summary>${content}</details>`;
+  },
+  regExp: /<details><summary>(.*?)<\/summary>(.*?)<\/details>/,
+  replace: (parentNode, _1, match) => {
+    const [, title, content] = match;
+    const containerNode = $createCollapsibleContainerNode(true);
+    const titleNode = $createCollapsibleTitleNode();
+    const contentNode = $createCollapsibleContentNode();
+
+    $convertFromMarkdownString(title, PLAYGROUND_TRANSFORMERS, titleNode);
+    $convertFromMarkdownString(content, PLAYGROUND_TRANSFORMERS, contentNode);
+
+    containerNode.append(titleNode, contentNode);
+    parentNode.replace(containerNode);
+  },
+  type: "element",
+};
+
+// Add COLLAPSIBLE to PLAYGROUND_TRANSFORMERS
 export const PLAYGROUND_TRANSFORMERS: Array<Transformer> = [
+  COLLAPSIBLE,
   TABLE,
   HR,
   IMAGE,
