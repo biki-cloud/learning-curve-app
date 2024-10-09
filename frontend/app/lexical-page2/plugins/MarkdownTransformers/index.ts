@@ -366,7 +366,7 @@ export const COLLAPSIBLE: ElementTransformer = {
 
     return `<details><summary>${title}</summary>${content}</details>`;
   },
-  regExp: /<details><summary>(.*?)<\/summary>(.*?)<\/details>/,
+  regExp: /<details><summary>(.*?)<\/summary>([\s\S]*?)<\/details>/,
   replace: (parentNode, _1, match) => {
     const [, title, content] = match;
     const containerNode = $createCollapsibleContainerNode(true);
