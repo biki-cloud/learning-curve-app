@@ -359,13 +359,14 @@ export const COLLAPSIBLE: ElementTransformer = {
     const content = $convertToMarkdownString(
       PLAYGROUND_TRANSFORMERS,
       contentNode
-    );
+    ).replace(/\n/g, "\\n");
     console.log("----------");
     console.log(title);
     console.log(content);
 
     return `<details><summary>${title}</summary>${content}</details>`;
   },
+  // contentが１行以上の場合は下のregExpに引っかからず、replaceでmarkdown -> nodeに変換できない
   regExp: /<details><summary>(.*?)<\/summary>([\s\S]*?)<\/details>/,
   replace: (parentNode, _1, match) => {
     const [, title, content] = match;
