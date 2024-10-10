@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.template.entity.LearningContentEntity;
 import com.example.template.entity.UserEntity;
 import com.example.template.learningCurveStrategy.DefaultLearningCurveStrategy;
-import com.example.template.learningCurveStrategy.GetFewReviewCountLearningStrategy;
 import com.example.template.learningCurveStrategy.LearningCurveStrategy;
-import com.example.template.learningCurveStrategy.RandomLearningCurveStrategy;
 import com.example.template.service.LearningContentService;
 
 import java.util.List;
@@ -57,15 +55,11 @@ public class LearningContentController {
         LearningCurveStrategy strategy;
         // 戦略の選択
         switch (strategyType) {
-            case "GetFewReviewCountLearningStrategy":
-                strategy = new GetFewReviewCountLearningStrategy();
-                break;
             case "DefaultLearningCurveStrategy":
                 strategy = new DefaultLearningCurveStrategy();
                 break;
-            case "RandomLearningCurveStrategy":
             default:
-                strategy = new RandomLearningCurveStrategy();
+                strategy = new DefaultLearningCurveStrategy();
                 break;
         }
         
@@ -125,8 +119,6 @@ public class LearningContentController {
     @GetMapping("/strategies")
     public ResponseEntity<List<String>> getLearningCurveStrategies() {
         List<String> strategies = List.of(
-            new GetFewReviewCountLearningStrategy().getClass().getSimpleName(),
-            new RandomLearningCurveStrategy().getClass().getSimpleName(),
             new DefaultLearningCurveStrategy().getClass().getSimpleName()
         );
         return ResponseEntity.ok(strategies);

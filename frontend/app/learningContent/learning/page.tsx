@@ -278,9 +278,6 @@ export default function ModernLearningCurvePage() {
                     <Edit className="mr-2 h-4 w-4" /> 編集
                   </Button>
                 </Link>
-                <Button onClick={handleNext} variant="outline">
-                  次へ <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
               </CardFooter>
             </Card>
           </motion.div>
