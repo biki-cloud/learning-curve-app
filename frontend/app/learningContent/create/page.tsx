@@ -189,6 +189,7 @@ export default function CreateLearningContent() {
                   <TabsContent value="edit">
                     <SimpleMDE
                       getMdeInstance={getInstance}
+                      className="mt-1"
                       value={newContent.content}
                       onChange={(value) =>
                         setNewContent({ ...newContent, content: value })
@@ -198,14 +199,19 @@ export default function CreateLearningContent() {
                         toolbar: [
                           "bold",
                           "italic",
-                          "heading",
+                          "heading-1",
+                          "heading-2",
+                          "heading-3",
                           "|",
                           "quote",
                           "unordered-list",
                           "ordered-list",
+                          "clean-block",
                           "|",
                           "link",
                           "image",
+                          "table",
+                          "horizontal-rule",
                           "|",
                           "preview",
                           "side-by-side",
@@ -219,7 +225,6 @@ export default function CreateLearningContent() {
                           },
                         ],
                       }}
-                      className="mt-1"
                     />
                   </TabsContent>
                   <TabsContent value="preview">
