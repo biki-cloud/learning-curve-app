@@ -25,6 +25,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { PlusCircle, X, Save } from "lucide-react";
+import CustomDetailTagToolBarButton from "@/components/mylib/markdownCustomToolBar";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -193,6 +194,31 @@ export default function CreateLearningContent() {
                         setNewContent({ ...newContent, content: value })
                       }
                       events={{ drop: handleDrop, paste: handlePaste }}
+                      options={{
+                        toolbar: [
+                          "bold",
+                          "italic",
+                          "heading",
+                          "|",
+                          "quote",
+                          "unordered-list",
+                          "ordered-list",
+                          "|",
+                          "link",
+                          "image",
+                          "|",
+                          "preview",
+                          "side-by-side",
+                          "fullscreen",
+                          "|",
+                          {
+                            name: "custom-details",
+                            action: CustomDetailTagToolBarButton.action,
+                            className: CustomDetailTagToolBarButton.className,
+                            title: CustomDetailTagToolBarButton.title,
+                          },
+                        ],
+                      }}
                       className="mt-1"
                     />
                   </TabsContent>
