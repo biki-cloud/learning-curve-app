@@ -151,6 +151,16 @@ export default function CreateLearningContent() {
     }
   };
 
+  const handleAddDetails = () => {
+    const summary = "summary";
+    setNewContent((prevContent) => ({
+      ...prevContent,
+      content:
+        prevContent.content +
+        `<details>\n<summary>${summary}</summary>\n\n\n</details>`,
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b to-white">
       <div className="container mx-auto px-4 py-8">
@@ -178,8 +188,19 @@ export default function CreateLearningContent() {
                   className="mt-1"
                 />
               </div>
+
               <div>
-                <Label>内容</Label>
+                <Label className="text-lg">内容</Label>
+                <br></br>
+                <Button
+                  type="button"
+                  onClick={handleAddDetails}
+                  className="mt-4"
+                  variant="outline"
+                >
+                  <PlusCircle className="w-4 h-4 mr-2" />
+                  Add detail tag
+                </Button>
                 <Tabs defaultValue="edit" className="w-full">
                   <TabsList>
                     <TabsTrigger value="edit">編集</TabsTrigger>
