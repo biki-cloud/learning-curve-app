@@ -133,7 +133,7 @@ export default function ModernLearningContentList() {
           />
         </div>
         <Link href="/learningContent/create">
-          <Button>
+          <Button variant="outline">
             <Plus className="mr-2 h-4 w-4" /> 新規作成
           </Button>
         </Link>
@@ -183,7 +183,7 @@ export default function ModernLearningContentList() {
                   </Button>
                 </Link>
                 <Button
-                  variant="destructive"
+                  variant="outline"
                   size="sm"
                   onClick={() => handleDelete(content.id!)}
                 >
