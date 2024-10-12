@@ -43,6 +43,7 @@ export default function ModernLearningCurvePage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [remainingCount, setRemainingCount] = useState<number>(0); // 残りの学習件数を管理する状態を追加
 
   const router = useRouter();
 
@@ -70,7 +71,9 @@ export default function ModernLearningCurvePage() {
           userId,
           selectedCategories.join(",")
         );
+        console.log(data);
         setLearningContents(data);
+        setRemainingCount(data.length); // 残りの学習件数を設定
         if (data.length > 0) {
           setCurrentContent(data[0]);
         }
@@ -85,6 +88,7 @@ export default function ModernLearningCurvePage() {
       const currentIndex = learningContents.indexOf(currentContent);
       if (currentIndex < learningContents.length - 1) {
         setCurrentContent(learningContents[currentIndex + 1]);
+        setRemainingCount((prevCount) => prevCount - 1); // 残りの学習件数を1減らす
       } else {
         await fetchNewContents();
       }
@@ -214,6 +218,8 @@ export default function ModernLearningCurvePage() {
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容</h1>
         <p className="text-lg text-gray-600">あなたの学びをサポートします</p>
+
+        {/* 残りの学習件数を表示 */}
       </header>
       <main>
         <Card className="mb-8">
@@ -246,6 +252,9 @@ export default function ModernLearningCurvePage() {
             </div>
           </CardContent>
         </Card>
+        <p className="text-lg text-gray-600">
+          残りの学習件数: {remainingCount} 件
+        </p>{" "}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentContent.id}
