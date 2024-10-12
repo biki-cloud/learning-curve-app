@@ -132,6 +132,21 @@ export default function EditLearningContent({ params }: Props) {
     }
   };
 
+  const handleAddDetails = () => {
+    const summary = "summary"; // ここでsummaryの内容を指定
+    setLearningContent((prevContent) => {
+      if (prevContent) {
+        return {
+          ...prevContent,
+          content:
+            prevContent.content +
+            `<details>\n<summary>${summary}</summary>\n\n\n</details>`,
+        };
+      }
+      return null;
+    });
+  };
+
   if (!learningContent) {
     return <p>読み込み中...</p>;
   }
@@ -158,6 +173,16 @@ export default function EditLearningContent({ params }: Props) {
 
             <div className="space-y-2">
               <Label htmlFor="content">内容</Label>
+              <br></br>
+              <Button
+                type="button"
+                onClick={handleAddDetails}
+                className="mt-4"
+                variant="outline"
+              >
+                <PlusCircle className="w-4 h-4 mr-2" />
+                Add detail tag
+              </Button>
               <Tabs defaultValue="edit" className="w-full">
                 <TabsList>
                   <TabsTrigger value="edit">編集</TabsTrigger>
