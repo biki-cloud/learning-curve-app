@@ -173,7 +173,7 @@ export default function EditLearningContent({ params }: Props) {
 
             <div className="space-y-2">
               <Label htmlFor="content">内容</Label>
-              <br></br>
+              <br />
               <Button
                 type="button"
                 onClick={handleAddDetails}
@@ -214,7 +214,11 @@ export default function EditLearningContent({ params }: Props) {
                         ? "outline"
                         : "default"
                     }
-                    className="cursor-pointer"
+                    className={`cursor-pointer transition-all duration-300 ease-in-out ${
+                      selectedCategories.includes(category)
+                        ? "bg-blue-500 text-white !gb-blue-600"
+                        : "text-gray-700"
+                    }`}
                     onClick={() => handleCategoryToggle(category)}
                   >
                     {category}
@@ -239,7 +243,11 @@ export default function EditLearningContent({ params }: Props) {
                     placeholder="新しいカテゴリ名"
                     className="flex-grow"
                   />
-                  <Button type="button" onClick={handleAddCategory}>
+                  <Button
+                    type="button"
+                    onClick={handleAddCategory}
+                    variant="outline"
+                  >
                     追加
                   </Button>
                   <Button

@@ -146,7 +146,11 @@ export default function ModernLearningContentList() {
             variant={
               selectedCategories.includes(category) ? "outline" : "default"
             }
-            className="cursor-pointer"
+            className={`cursor-pointer transition-all duration-300 ease-in-out ${
+              selectedCategories.includes(category)
+                ? "bg-blue-500 text-white !gb-blue-600"
+                : "text-gray-700"
+            }`}
             onClick={() => toggleCategory(category)}
           >
             {category}

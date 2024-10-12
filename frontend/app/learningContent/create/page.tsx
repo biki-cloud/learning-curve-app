@@ -235,7 +235,11 @@ export default function CreateLearningContent() {
                           ? "outline"
                           : "default"
                       }
-                      className="cursor-pointer"
+                      className={`cursor-pointer transition-all duration-300 ease-in-out ${
+                        selectedCategories.includes(category)
+                          ? "bg-blue-500 text-white !gb-blue-600"
+                          : "text-gray-700"
+                      }`}
                       onClick={() => handleToggleCategory(category)}
                     >
                       {category}
@@ -260,7 +264,11 @@ export default function CreateLearningContent() {
                       placeholder="新しいカテゴリ名"
                       className="flex-grow"
                     />
-                    <Button type="button" onClick={handleAddCategory}>
+                    <Button
+                      type="button"
+                      onClick={handleAddCategory}
+                      variant="outline"
+                    >
                       追加
                     </Button>
                     <Button
