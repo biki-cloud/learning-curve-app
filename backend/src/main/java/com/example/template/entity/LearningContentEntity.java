@@ -10,6 +10,7 @@ import lombok.Data;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "learning_content")
@@ -67,7 +68,7 @@ public class LearningContentEntity {
             level = Math.min(level + 1, 5); // Increase level (max 3)
         }
         
-        lastReviewedDate = LocalDate.now();
+        lastReviewedDate = LocalDate.now(ZoneId.of("Asia/Tokyo")); // 日本の日時
         nextReviewDate = calculateNextReviewDate();
     }
 
@@ -81,7 +82,7 @@ public class LearningContentEntity {
             level = Math.max(level - 1, 1); // Decrease level (min 1)
         }
         
-        lastReviewedDate = LocalDate.now();
+        lastReviewedDate = LocalDate.now(ZoneId.of("Asia/Tokyo")); // 日本の日時
         nextReviewDate = calculateNextReviewDate();
     }
 
@@ -89,17 +90,17 @@ public class LearningContentEntity {
     private LocalDate calculateNextReviewDate() {
         switch (level) {
             case 1:
-                return LocalDate.now().plusDays(1); // Next day
+                return LocalDate.now(ZoneId.of("Asia/Tokyo")).plusDays(1); // Next day
             case 2:
-                return LocalDate.now().plusDays(3); // 3 days later
+                return LocalDate.now(ZoneId.of("Asia/Tokyo")).plusDays(3); // 3 days later
             case 3:
-                return LocalDate.now().plusWeeks(1); // 1 week later
+                return LocalDate.now(ZoneId.of("Asia/Tokyo")).plusWeeks(1); // 1 week later
             case 4:
-                return LocalDate.now().plusWeeks(3); // 3 weeks later
+                return LocalDate.now(ZoneId.of("Asia/Tokyo")).plusWeeks(2); // 2 weeks later
             case 5:
-                return LocalDate.now().plusWeeks(5); // 5 weeks later
+                return LocalDate.now(ZoneId.of("Asia/Tokyo")).plusWeeks(3); // 3 weeks later
             default:
-                return null;
+                return LocalDate.now(ZoneId.of("Asia/Tokyo")).plusWeeks(3); // 3 weeks later
         }
     }
 
