@@ -11,6 +11,7 @@ export interface LearningContent {
   // フロント側で設定
   reviewCount: number;
   draft: boolean;
+  level: number;
 }
 
 export interface User {

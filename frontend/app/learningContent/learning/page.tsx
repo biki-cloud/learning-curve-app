@@ -265,6 +265,11 @@ export default function ModernLearningCurvePage() {
               <CardHeader>
                 <CardTitle>{currentContent.title}</CardTitle>
                 <Badge>{currentContent.category}</Badge>
+                {currentContent && (
+                  <p className="text-lg text-gray-600">
+                    学習習熟度: {currentContent.level}
+                  </p>
+                )}
               </CardHeader>
               <CardContent>
                 <div className="prose dark:prose-invert max-w-none">
