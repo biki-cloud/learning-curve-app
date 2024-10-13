@@ -218,8 +218,6 @@ export default function ModernLearningCurvePage() {
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-blue-600">学習内容</h1>
         <p className="text-lg text-gray-600">あなたの学びをサポートします</p>
-
-        {/* 残りの学習件数を表示 */}
       </header>
       <main>
         <Card className="mb-8">
@@ -253,7 +251,7 @@ export default function ModernLearningCurvePage() {
           </CardContent>
         </Card>
         <p className="text-lg text-gray-600">
-          残りの学習件数: {remainingCount} 件
+          本日の残り学習件数: {remainingCount} 件
         </p>{" "}
         <AnimatePresence mode="wait">
           <motion.div
